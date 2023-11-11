@@ -1,4 +1,4 @@
-let developmentMode = true;
+let developmentMode = false;
 
 function pollDevelopmentMode() {
 	return developmentMode;

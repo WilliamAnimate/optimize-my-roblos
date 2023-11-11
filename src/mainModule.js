@@ -51,17 +51,13 @@ optimizeBtn.addEventListener("click", async function() {
 });
 
 invoke("get_version").then((result) => {
-	document.getElementById("version").textContent = result;
+	document.getElementById("version").textContent = "v" + result;
 }).catch((error) => {
 	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem at the Rust backend.", error);
 });
 
 if (!pollDevelopmentMode()) {
-	setTimeout(function() {
-		checkForNewVersion();
-	}, 1000);
+	setTimeout(checkForNewVersion(), 1000);
 } else {
-	setTimeout(function() {
-		hideElementById(document.getElementById("cursor-wait-hbox"))
-	}, 100);
+	setTimeout(hideElementById(document.getElementById("cursor-wait-hbox")), 100);
 }
