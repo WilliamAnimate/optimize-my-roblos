@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="styles.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Optimize my Roblos</title>
+		<script src="/main.js" defer></script>
+		<script type="module" src="/mainModule.js" defer></script>
+		<!-- <script src="./main.js" defer></script> -->
+	</head>
+	<body>
+		<div id="panic" style="opacity: 0">
+			<img src="https://cdn.discordapp.com/emojis/1138394324082630726.gif?size=64">
+			<fieldset>
+				<legend>Error details</legend>
+				<h1 id="errortitle"></h1>
+				<p id="errormessage"></p>
+			</fieldset>
+		</div>
+
+		<div class="cursor-wait" id="cursor-wait-hbox">
+			<h1 class="centered" id="update_text_container">
+				<svg xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>
+				<br>
+				Checking for updates
+
+			</h1>
+			<button style="position:fixed;left:50%;top:70%" id="update_bypass" onclick="document.getElementById('cursor-wait-hbox').remove()"><p>skip</p></button>
+			<!-- removing the thing causes errors in checkForNewVersion lmao cope -->
+		</div>
+		<div id="main-container">
+			<h1 id="title">Optimize my Roblos<br><span id="version"></span></h1>
+			<br>
+			<p>
+				<b>What does this do?</b>
+				<li>Unlocks your FPS</li>
+				<li>Disable telemetry</li>
+				<li>Use the Vulkan renderer</li>
+				<!-- <a href="#">Click here to read more</a> -->
+				<br>
+				Please note that frame-rate or response times aren't guarnteed to be improved; every system and configuration is different.
+			</p>
+			<p id="done-txt" class="hidden">done</p>
+			<button id="btn-optimize"><p>Optimize!</p></button>
+		</div>
+		<p id="copyright">© 2023 WilliamAnimate. This project is licensed under MIT.</p>
+	</body>
+</html>
