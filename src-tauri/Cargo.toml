@@ -1,25 +1,15 @@
 [package]
 name = "optimize_my_roblos"
 edition = "2021"
-version = "0.9.0"
+version = "0.9.1"
 authors = ["WilliamAnimate"]
 description = "Optimize my Roblox!"
 license = "MIT"
 repository = "https://github.com/williamanimate/optimize-my-roblos/"
 
-# [dependencies.serde]
-# version = "1.0"
-# features = []
-# default-features = false
-
-# [dependencies.serde_json]
-# version = "1.0"
-# features = []
-# default-features = false
-
 [dependencies.tauri]
 version = "1.5"
-features = [ "shell-open", "wry", "shell-open-api", "window-set-content-protected", "tauri-runtime-wry", "regex"]
+features = [ "shell-open", "wry", "shell-open-api", "tauri-runtime-wry", "regex"]
 default-features = false
 
 [build-dependencies.tauri-build]

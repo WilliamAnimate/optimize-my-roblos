@@ -3,11 +3,15 @@
 
 use std::{path::Path, fs};
 
+/// returns the app version, if this is not self-documenting code then I don't know what is.
 #[tauri::command]
 fn get_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 
+/// the main function for optimizing
+///
+/// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
 #[tauri::command]
 fn optimize() {
     let local_appdata_path = match std::env::var("LOCALAPPDATA") {
@@ -19,32 +23,19 @@ fn optimize() {
         }
     };
 
-    let folder_path = format!("{}\\Roblox\\Versions", local_appdata_path);
-
-    let full_path = std::env::current_dir().unwrap().join(folder_path);
-    let result = find_roblox_exe(&full_path);
-
-    match result {
+    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
-            let rlbx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path); // oh god where tf are we im losing it to rust
-            // i suppose i owe you an explaination:
-            // so basically, folder_path doesnt want to be .clone()'d, nor is it copyable or something, so im gonna repeat this code here
-            // if you modify folder_path then modify this too lmao
-            // i **SERIOUSLY** need to read the rustbook again
+            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
 
-            println!("Found RobloxPlayerBeta.exe in folder: {}", result_folder_name);
-
-            println!("{}", rlbx_path);
-
-            if let Err(e) = fs::create_dir_all(&rlbx_path) {
-                eprintln!("Error creating folder: {}", e);
+            if let Err(err) = fs::create_dir_all(&rblx_path) {
+                eprintln!("Error creating folder: {}", err);
                 return;
             }
 
             let client_settings = include_bytes!("ClientAppSettings.json");
 
-            if let Err(e) = fs::write(format!("{}\\ClientAppSettings.json", rlbx_path), client_settings) {
-                eprintln!("Error creating file: {}", e);
+            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
+                eprintln!("Error creating file: {}", err);
                 return;
             }
         }
@@ -52,6 +43,7 @@ fn optimize() {
     }
 }
 
+/// this is where the program's entrypoint is. if this is not self-documenting code, then I don't know what is.
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -63,21 +55,28 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-// TODO: refactor and fix indentation hell
+/// finds the roblox working directory. this code assumes that:
+///
+/// - you have supplied the directory to search, keep in mind that **there is _no_ fallback directory if it isn't supplied**
+/// - roblox does not modify the way "instances" are installed. this code works as of 11/11/2023
+/// - you have a match statement to see the result
+///
+/// returns: the full path of the working directory, if its not found, it will return `None`.
+///
+/// for me (11/11/2023), it returns `C:\Users\willi\AppData\Local\Roblox\Versions\version-3aba366803e44f0e`
+// TODO: fix indentation hell
 fn find_roblox_exe(directory: &Path) -> Option<String> {
     if let Ok(entries) = fs::read_dir(directory) {
-        for entry in entries {
-            if let Ok(entry) = entry {
-                let path = entry.path();
-                if path.is_dir() {
-                    if let Some(folder_name) = find_roblox_exe(&path) {
-                        return Some(folder_name);
-                    }
-                } else if path.is_file() && path.file_name().unwrap_or_default() == "RobloxPlayerBeta.exe" {
-                    if let Some(parent) = path.parent() {
-                        if let Some(folder_name) = parent.file_name() {
-                            return Some(folder_name.to_string_lossy().to_string());
-                        }
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                if let Some(folder_name) = find_roblox_exe(&path) {
+                    return Some(folder_name);
+                }
+            } else if path.is_file() && path.file_name() == Some("RobloxPlayerBeta.exe".as_ref()) {
+                if let Some(parent) = path.parent() {
+                    if let Some(folder_name) = parent.file_name() {
+                        return Some(folder_name.to_string_lossy().to_string());
                     }
                 }
             }
