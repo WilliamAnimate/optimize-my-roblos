@@ -1,7 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{path::Path, fs};
+mod console;
+
+use crate::console::cli_attach_to_console;
+use std::{path::Path, fs, env};
 
 /// returns the app version, if this is not self-documenting code then I don't know what is.
 #[tauri::command]
@@ -45,6 +48,40 @@ fn optimize() {
 
 /// this is where the program's entrypoint is. if this is not self-documenting code, then I don't know what is.
 fn main() {
+    let args: Vec<String> = env::args().collect();
+
+    // assume CLI first
+    // look i know tauri has their own feature for CLIs but i like seeing the world burn
+    if args.len() > 1 {
+        cli_attach_to_console();
+
+        println!("Optimize_my_Roblos version {}", get_version());
+        println!("Keep in mind that the updater is NOT present in CLI mode.");
+
+        // for (index, _argument) in args.iter().enumerate().skip(1) {
+        match args.get(1).map(|arg| arg.as_str()) {
+            Some("-optimizenow") | Some("-o") => {
+                optimize();
+                println!("Optimization done!");
+            },
+            Some("-help") | Some("-h") => {
+                println!("=== HELP ===");
+                println!("If this is an actual plea for help, this isn't the right place.");
+                println!("otherwise, if you need help with CLI mode, then this is the right place");
+                println!("-optimizenow -o          runs the optimizer from CLI mode");
+                println!("-help -h                 shows the help menu, looks like you already figured this out");
+            }
+            _ => {
+                println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
+            }
+        }
+        // }
+
+        println!("press any key to exit");
+        std::process::exit(420);
+    }
+
+    // no CLI, start the GUI.
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_version,
