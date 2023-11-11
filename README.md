@@ -2,7 +2,7 @@
 
 # optimize-my-roblos
 
-A simple, low overhead & file footprint GUI application for optimizing the roblox ClientAppSettings.json file.
+A simple and small GUI application for optimizing the roblox ClientAppSettings.json file.
 
 ## Table of contents
 
@@ -17,15 +17,21 @@ A simple, low overhead & file footprint GUI application for optimizing the roblo
 
 - Actually has a GUI.
 
-- Does not & never stays open in the background, reducing your machine's risk of attack by having to exploit OTHER processes.
+- Does not need/have an option to stay open in the background, no need to lose that performance for no reason.
 
-- Backend is written in [Rust](https://rust-lang.org), meaning that even IF this process is open, it'll be extremely difficult to exploit.
+- Backend is written in [Rust](https://rust-lang.org), the language that even Microsoft themselves are adopting.
 
 - Powered by 100% (F)(L)OSS. No hidden keyloggers.
 
 ## Why others over Optimize_my_Roblos?
 
-- ~~Optimize_my_Roblos is way too bloated lmao~~
+- ~~Optimize_my_Roblos is way too bloated lmao.~~
+
+<!-- markdownlint-disable MD052 -->
+- written in the Rust and [object][Object] programming language, when the others are written in superior languages like batch, c++, and others.
+<!-- markdownlint-enable MD052 -->
+
+- made by someone who has no clue what a fflag stands for.
 
 ## How?
 
