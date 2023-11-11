@@ -3,13 +3,8 @@
 
 use std::{path::Path, fs};
 
-static mut DONE:bool = false;
-
 #[tauri::command]
 fn get_version() -> String {
-    // let ret_value:String = "0.9.1".to_string();
-
-    // ret_value
     env!("CARGO_PKG_VERSION").to_string()
 }
 
@@ -39,7 +34,6 @@ fn optimize() {
 
             println!("Found RobloxPlayerBeta.exe in folder: {}", result_folder_name);
 
-            // because im too stupid to figure out error handling, this is where the actual code for optimizing goes!11!!1232
             println!("{}", rlbx_path);
 
             if let Err(e) = fs::create_dir_all(&rlbx_path) {
@@ -56,20 +50,14 @@ fn optimize() {
         }
         None => eprintln!("RobloxPlayerBeta not found... do you have the game installed?"),
     }
-
-    unsafe {
-        DONE = true;
-    }
 }
-
-#[tauri::command]
-fn queue_status() -> bool { unsafe {
-    DONE // "haha function is now 'DONE' please laugh"
-}}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_version, optimize, queue_status])
+        .invoke_handler(tauri::generate_handler![
+            get_version,
+            optimize
+        ])
 
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

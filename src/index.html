@@ -25,10 +25,8 @@
 				<svg xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>
 				<br>
 				Checking for updates
-
 			</h1>
-			<button style="position:fixed;left:50%;top:70%" id="update_bypass" onclick="document.getElementById('cursor-wait-hbox').remove()"><p>skip</p></button>
-			<!-- removing the thing causes errors in checkForNewVersion lmao cope -->
+			<button style="position:fixed;left:50%;top:70%" id="update_bypass" onclick="hideElementById(document.getElementById('cursor-wait-hbox'));setTimeout(function(){document.getElementById('cursor-wait-hbox').remove()},280)"><p>skip</p></button>
 		</div>
 		<div id="main-container">
 			<h1 id="title">Optimize my Roblos<br><span id="version"></span></h1>
@@ -42,7 +40,7 @@
 				<br>
 				Please note that frame-rate or response times aren't guarnteed to be improved; every system and configuration is different.
 			</p>
-			<p id="done-txt" class="hidden">done</p>
+			<p id="done-txt" class="hidden">Next steps: open roblox and check the graphics settings, if there are 21 options, then it means that it worked!</p>
 			<button id="btn-optimize"><p>Optimize!</p></button>
 		</div>
 		<p id="copyright">© 2023 WilliamAnimate. This project is licensed under MIT.</p>
