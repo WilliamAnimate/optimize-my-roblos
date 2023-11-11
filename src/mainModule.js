@@ -4,7 +4,7 @@ const optimizeBtn = document.getElementById("btn-optimize");
 
 function checkForNewVersion() {
 	const xhr = new XMLHttpRequest(); // can js please cooperate and let me make this a one-liner
-	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases/latest");
+	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases");
 	xhr.setRequestHeader("User-Agent", "optimize_my_roblos"); // FIXME: lmaoooo don't do this
 
 	xhr.onload = async function() {
@@ -12,10 +12,11 @@ function checkForNewVersion() {
 			hideElementById(document.getElementById("cursor-wait-hbox"))
 		}
 
-		const latest = JSON.parse(xhr.responseText).tag_name;
+		const releases = JSON.parse(xhr.responseText);
+		const latest = releases[0].tag_name.slice(1);
 
 		const result = await invoke("get_version");
-		if (latest !== result) {
+		if (latest > result) {
 			const update_text_container = document.getElementById("update_text_container");
 			const update_bypass = document.getElementById("update_bypass");
 
