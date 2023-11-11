@@ -38,7 +38,7 @@ If done correctly, you can make roblox significantly faster than what they give 
 
 ## Building from Source
 
-<!-- **Looking for downloads? It isn't here, look over in the <u>releases</u> tab**. -->
+**Looking for downloads? It isn't here, look over [here](https://github.com/WilliamAnimate/optimize-my-roblos/releases)**.
 
 ### prerequisites
 
@@ -82,6 +82,4 @@ that's all.
 
 ## Download
 
-<!-- **Congratulations!** you've scrolled past it. Because i'm a monster, i'm not going to give you a link. 💀👍 -->
-
-Soon, for now, you can [Build from Source](#building-from-source)
+**Congratulations!** you've scrolled past it. [Downloads are over here](https://github.com/WilliamAnimate/optimize-my-roblos/releases)

@@ -14,30 +14,7 @@ function panic(title, message) {
 	panic.style.opacity = 1;
 }
 
-/**
- * very specific use case lol
- * for now this code doesn't work as intended, just give it an element
- */
-function isThisAnElement(element) {
-	try {
-		document.getElementById(element);
-
-		console.log(element + " isn't an element");
-
-		return false;
-	} catch {
-		console.log(element + " is an element");
-
-		return true; // because it can find the element of 'a'
-	}
-}
-
 function hideElementById(element) {
-	// if (!isThisAnElement(element)) {
-	// 	console.log("no")
-	// 	element = document.getElementById(element);
-	// }
-
 	element.classList.add("fadeout");
 	setTimeout(function() {
 		element.classList.add("hidden");
@@ -45,11 +22,6 @@ function hideElementById(element) {
 	}, 300);
 }
 function showElementById(element) {
-	// if (!isThisAnElement(element)) {
-	// 	console.log("no2")
-	// 	element = document.getElementById(element);
-	// }
-
 	element.classList.remove("hidden");
 	element.classList.add("fadein");
 	setTimeout(function() {
