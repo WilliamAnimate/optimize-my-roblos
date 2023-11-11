@@ -25,7 +25,7 @@ body {
 }
 
 body, button {
-	font-family: lexend, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-family: 'Lexend', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 * {margin: 1px}
@@ -98,6 +98,7 @@ a {color: #00aeff}
 	left: 50%;
 	top: 55%;
 	transform: translate(-50%, -50%);
+	color: lightgreen;
 }
 
 #btn-optimize {
