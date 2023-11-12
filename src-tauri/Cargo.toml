@@ -9,7 +9,7 @@ repository = "https://github.com/williamanimate/optimize-my-roblos/"
 
 [dependencies.tauri]
 version = "1.5"
-features = [ "shell-open", "wry", "shell-open-api", "tauri-runtime-wry", "regex"]
+features = ["shell-open", "shell-open-api", "wry", "tauri-runtime-wry", "open"]
 default-features = false
 
 [build-dependencies.tauri-build]
@@ -20,6 +20,14 @@ features = []
 custom-protocol = ["tauri/custom-protocol"]
 
 [profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.idfk]
+inherits = "release"
 opt-level = "z"
 lto = true
 codegen-units = 1
