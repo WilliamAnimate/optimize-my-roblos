@@ -54,7 +54,7 @@ optimizeBtn.addEventListener("click", async function() {
 unoptimizeBtn.addEventListener("click", async function() {
 	putLoadingAnimationOnId(unoptimizeBtn);
 	await invoke("unoptimize");
-	removeLoadingAnimationOnId(optimizeBtn);
+	removeLoadingAnimationOnId(unoptimizeBtn);
 });
 
 // alt tweaks
