@@ -6,7 +6,6 @@ if not defined option (
 	exit 1
 )
 
-echo %option%
 set o=2
 
 if %option% EQU y (
@@ -21,10 +20,7 @@ if %option% EQU y (
 	exit 0
 )
 
-
-echo %o%
-
-if o EQU 1 (
+if %o% EQU 1 (
 	cd src-tauri
 	cargo +nightly build -Z build-std=std,panic_abort --target x86_64-pc-windows-msvc --release
 ) else if o EQU 0 (
