@@ -141,7 +141,7 @@ button {
 
 	cursor: pointer;
 
-	transition: background-color 300ms, color 300ms, all 2s;
+	transition: background-color 300ms, color 300ms;
 	/* TODO: make height adjustment work */
 
 	overflow: hidden;
