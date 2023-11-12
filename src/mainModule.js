@@ -1,7 +1,5 @@
 const { invoke } = window.__TAURI__.tauri;
 
-const optimizeBtn = document.getElementById("btn-optimize");
-
 function checkForNewVersion() {
 	const xhr = new XMLHttpRequest(); // can js please cooperate and let me make this a one-liner
 	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases");
@@ -39,22 +37,52 @@ function checkForNewVersion() {
 	xhr.send();
 }
 
+const optimizeBtn = document.getElementById("btn-optimize");
+const unoptimizeBtn = document.getElementById("btn-unoptimize");
+const alttweaksBtn = document.getElementById("btn-adv-alttweaks");
+const vulkanVoxelBtn = document.getElementById("btn-adv-vulkanvoxel");
+const mintweaks = document.getElementById("btn-adv-mintweaks");
+const mintweaksNoVulkan = document.getElementById("btn-adv-mintweaks-novulkan");
+
 optimizeBtn.addEventListener("click", async function() {
-	optimizeBtn.disabled = true;
-	optimizeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>';
-
-	optimizeBtn.classList.add("cursor-wait");
-
+	putLoadingAnimationOnId(optimizeBtn);
 	await invoke("optimize");
-	optimizeBtn.classList.remove("cursor-wait");
-	optimizeBtn.innerHTML = "<p>Done!</p>"
+	removeLoadingAnimationOnId(optimizeBtn);
 	showElementById(document.getElementById("done-txt"));
+});
+
+unoptimizeBtn.addEventListener("click", async function() {
+	putLoadingAnimationOnId(unoptimizeBtn);
+	await invoke("unoptimize");
+	removeLoadingAnimationOnId(optimizeBtn);
+});
+
+// alt tweaks
+alttweaksBtn.addEventListener("click", async function() {
+	putLoadingAnimationOnId(alttweaksBtn);
+	await invoke("optimize_alt_tweaks");
+	removeLoadingAnimationOnId(alttweaksBtn);
+});
+vulkanVoxelBtn.addEventListener("click", async function() {
+	putLoadingAnimationOnId(vulkanVoxelBtn);
+	await invoke("optimize_vulkanvoxel");
+	removeLoadingAnimationOnId(vulkanVoxelBtn);
+});
+mintweaks.addEventListener("click", async function() {
+	putLoadingAnimationOnId(mintweaks);
+	await invoke("optimize_minimal");
+	removeLoadingAnimationOnId(mintweaks);
+});
+mintweaksNoVulkan.addEventListener("click", async function() {
+	putLoadingAnimationOnId(mintweaksNoVulkan);
+	await invoke("optimize_minimal_novulkan");
+	removeLoadingAnimationOnId(mintweaksNoVulkan);
 });
 
 invoke("get_version").then((result) => {
 	document.getElementById("version").textContent = "v" + result;
 }).catch((error) => {
-	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem at the Rust backend.", error);
+	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem in the Rust backend.", error);
 });
 
 if (!pollDevelopmentMode()) {

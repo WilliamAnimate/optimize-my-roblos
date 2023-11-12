@@ -3,7 +3,7 @@
 
 mod console;
 
-use crate::console::cli_attach_to_console;
+use crate::console::{cli_attach_to_console, show_console};
 use std::{path::Path, fs, env};
 
 /// returns the app version, if this is not self-documenting code then I don't know what is.
@@ -12,37 +12,83 @@ fn get_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 
-/// the main function for optimizing
-///
-/// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
-#[tauri::command]
-fn optimize() {
+fn get_localappdata_path() -> String {
     let local_appdata_path = match std::env::var("LOCALAPPDATA") {
         Ok(path) => path,
         Err(err) => {
             // TODO: error handling by calling the js?
-            eprintln!("Failed to get APPDATA path: {}", err);
-            return;
+            show_console();
+            panic!("failed to get localappdata path! {}", err);
         }
     };
+
+    local_appdata_path
+}
+
+fn apply_clientappsettings_json(client_settings: &[u8]) {
+    let local_appdata_path = get_localappdata_path();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
             let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
 
             if let Err(err) = fs::create_dir_all(&rblx_path) {
-                eprintln!("Error creating folder: {}", err);
-                return;
+                show_console();
+                panic!("Error creating folder: {}", err);
             }
-
-            let client_settings = include_bytes!("ClientAppSettings.json");
 
             if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                eprintln!("Error creating file: {}", err);
-                return;
+                show_console();
+                panic!("Error creating file: {}", err);
             }
         }
-        None => eprintln!("RobloxPlayerBeta not found... do you have the game installed?"),
+        None => {
+            show_console();
+            panic!("RobloxPlayerBeta not found... do you have the game installed?");
+        }
+    }
+}
+
+/// the main function for optimizing
+///
+/// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
+#[tauri::command]
+fn optimize() {
+    apply_clientappsettings_json(include_bytes!("ClientAppSettings.json"));
+}
+
+#[tauri::command]
+fn optimize_alt_tweaks() {
+    apply_clientappsettings_json(include_bytes!("ClientAppSettingsAlt.json"));
+}
+
+#[tauri::command]
+fn optimize_vulkanvoxel() {
+    apply_clientappsettings_json(include_bytes!("ClientAppVulkanVoxel.json"));
+}
+
+#[tauri::command]
+fn optimize_minimal() {
+    apply_clientappsettings_json(include_bytes!("ClientAppMinimal.json"));
+}
+
+#[tauri::command]
+fn optimize_minimal_novulkan() {
+    apply_clientappsettings_json(include_bytes!("ClientAppMinimalNoVulkan.json"));
+}
+
+#[tauri::command]
+fn unoptimize() {
+    let local_appdata_path = get_localappdata_path();
+
+    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+        Some(result_folder_name) => {
+            let _ = fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path));
+        }
+        None => {
+            show_console();
+            panic!("RobloxPlayerBeta not found... do you have the game installed?");
+        }
     }
 }
 
@@ -85,7 +131,12 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_version,
-            optimize
+            optimize,
+            optimize_alt_tweaks,
+            optimize_minimal_novulkan,
+            optimize_minimal,
+            optimize_vulkanvoxel,
+            unoptimize
         ])
 
         .run(tauri::generate_context!())

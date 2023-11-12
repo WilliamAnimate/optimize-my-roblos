@@ -1,0 +1,12 @@
+{
+"DFFlagDebugRenderForceTechnologyVoxel": true,
+"DFFlagESGamePerfMonitorEnabled": false,
+"DFIntESGamePerfMonitorHundredthsPercentage": 0,
+"DFIntTaskSchedulerTargetFps": 999,
+"FFlagCommitToGraphicsQualityFix": true,
+"FFlagDebugGraphicsPreferVulkan": true,
+"FFlagEnableQuickGameLaunch": false,
+"FFlagFixGraphicsQuality": true,
+"FFlagGpuGeometryManager3": true,
+"FFlagRenderGpuTextureCompressor": true
+}

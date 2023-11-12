@@ -29,6 +29,10 @@ body, button {
 }
 
 * {margin: 1px}
+*:focus-visible {
+	outline: #fff dotted 2px;
+	transition: none;
+}
 
 @media (prefers-reduced-motion) {
 	button::before{transition:none!important}
@@ -68,8 +72,8 @@ a {color: #00aeff}
 }
 
 #main-container {
-	margin-right: 100px;
-	margin-left: 100px;
+	margin-right: 50px;
+	margin-left: 50px;
 }
 
 #title {
@@ -83,20 +87,21 @@ a {color: #00aeff}
 
 	position: absolute;
 	bottom: -0.5em;
-	right: 4em;
+	right: 6.5em;
 }
 
 #copyright {
 	position: fixed;
 	left: 5px;
 	bottom: 5px;
-	margin: 0px
+	margin: 0px;
+	color: #858585;
 }
 
 #done-txt {
 	position: fixed;
 	left: 50%;
-	top: 55%;
+	top: 48%;
 	transform: translate(-50%, -50%);
 	color: lightgreen;
 }
@@ -104,7 +109,27 @@ a {color: #00aeff}
 #btn-optimize {
 	position: fixed;
 	left: 50%;
-	top: 70%;
+	top: 60%;
+}
+
+.transform-centering {transform: translate(-50%, -50%)}
+/* for some STUPID REASON you need a transform for some buttons
+i hatecssihatecssihatecss */
+.transform-none {transform: translate(0px, 0px)}
+
+	/* okay not half but you get the point */
+button.half-width {width: 198px; padding: 0.3em 0.6em}
+button.half-height {height: 60px}
+button.half-height p {font-size: 0.6em}
+button.secondary-btn {
+	position:fixed;
+	top: 72%;
+}
+button.secondary-btn.left {
+	left: 300px
+}
+button.secondary-btn.right {
+	left: 500px;
 }
 
 button {
@@ -117,24 +142,19 @@ button {
 	cursor: pointer;
 
 	transition: background-color 300ms, color 300ms, all 2s;
-	/* TODO: make height work */
+	/* TODO: make height adjustment work */
 
-	margin-bottom: 10px;
-
-	/* position: relative; */
 	overflow: hidden;
 
 	width: 400px;
 	height: 80px;
-
-	transform: translate(-50%, -50%);
 }
 
 button::before {
 	background-color: #fff;
 	content: '';
 	position: absolute;
-	width: 120%;
+	width: 100%;
 	height: 100%;
 	left: 0;
 	top: 0;
@@ -146,8 +166,8 @@ button[disabled]::before {background-color: #ffffff33}
 
 button p {
 	position: relative;
-	display: block;
 	margin: 0px;
+	padding: 0px;
 	color: #fff;
 
 	transition: color 300ms;
@@ -164,4 +184,32 @@ button:hover::before {
 	0%{stroke-dasharray:0.01px 43.97px;transform:rotate(0deg)}
 	50%{transform:rotate(450deg);stroke-dasharray:21.99px 21.99px}
 	100%{stroke-dasharray:.01px 43.97px;transform:rotate(1080deg)}
+}
+
+#_d_advanced {
+	position: fixed;
+	left: 8%;
+	top: 8%;
+	height: 450px;
+	width: 600px;
+	padding: 30px;
+	/* 1c1c1c */
+	background-color: #242424;
+	border: #fff;
+	border-radius: 1ex;
+	color: #eee;
+	border: transparent;
+
+	/* animation */
+	transition: opacity 0.3s, transform 0.3s;
+}
+
+dialog::backdrop {
+	/* TODO: figure out how to fade this in and then remove the display: none */
+	display: none
+}
+
+.flexbox-row {
+	display: flexbox;
+	flex-direction: row;
 }
