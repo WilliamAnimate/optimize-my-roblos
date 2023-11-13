@@ -25,7 +25,7 @@ if %o% EQU 1 (
 
 	cargo build --target x86_64-pc-windows-msvc --profile idfk -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort
 
-	:: gnu doesnt compile :crying: wtf are structs
+	@REM gnu doesnt compile :crying: wtf are structs
 	@REM cargo build --target x86_64-pc-windows-gnu --profile idfk -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort
 	echo a
 ) else if o EQU 0 (
