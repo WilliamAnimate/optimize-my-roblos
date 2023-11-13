@@ -1,4 +1,4 @@
-let developmentMode = true;
+let developmentMode = false;
 
 const btn_advanced = document.getElementById("btn-advanced");
 
@@ -58,7 +58,7 @@ function closeDialogById(element) {
 
 function putLoadingAnimationOnId(element) {
 	element.disabled = true;
-	element.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>';
+	element.innerHTML = '<svg style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>';
 
 	element.classList.add("cursor-wait");
 }
@@ -82,7 +82,7 @@ if (!developmentMode) {
 			document.body.style.opacity = opacity;
 			opacity += 0.02;
 		}, 10);
-	}, 300);
+	}, 40);
 } else {
 	document.body.style.backgroundColor = "#1b1b1b";
 	document.body.style.opacity = 1;
@@ -92,9 +92,6 @@ window.addEventListener('contextmenu', e => {
 	e.preventDefault();
 });
 window.addEventListener('keydown', e => {
-	// if (e.key !== "r") {
-	// 	e.preventDefault
-	// }
 	if (e.key == "Escape") {
 		e.preventDefault();
 	} else if (e.key == "f") {

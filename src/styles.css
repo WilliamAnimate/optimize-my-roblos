@@ -1,8 +1,19 @@
+@font-face {
+	font-family: Lexend;
+	src: url(Lexend-Regular.ttf);
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: Lexend;
+	src: url(Lexend-Bold.ttf);
+	font-weight: bold;
+}
+
 #panic {
 	position: fixed;
 	top: 0px;
 	left: 0px;
-
 	background-color: #000;
 	width: 100vw;
 	height: 100vh;
@@ -12,7 +23,6 @@
 .onTop {z-index:9999 !important}
 
 body {
-	/* background-color: #1b1b1b; */
 	color: #fff;
 	text-align: center;
 	user-select: none;
@@ -117,7 +127,7 @@ a {color: #00aeff}
 i hatecssihatecssihatecss */
 .transform-none {transform: translate(0px, 0px)}
 
-	/* okay not half but you get the point */
+/* okay not half but you get the point */
 button.half-width {width: 198px; padding: 0.3em 0.6em}
 button.half-height {height: 60px}
 button.half-height p {font-size: 0.6em}
@@ -192,21 +202,17 @@ button:hover::before {
 	top: 8%;
 	height: 450px;
 	width: 600px;
+}
+
+dialog {
 	padding: 30px;
-	/* 1c1c1c */
 	background-color: #242424;
 	border: #fff;
 	border-radius: 1ex;
 	color: #eee;
 	border: transparent;
 
-	/* animation */
 	transition: opacity 0.3s, transform 0.3s;
-}
-
-dialog::backdrop {
-	/* TODO: figure out how to fade this in and then remove the display: none */
-	display: none
 }
 
 .flexbox-row {

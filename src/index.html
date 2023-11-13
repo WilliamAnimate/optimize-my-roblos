@@ -1,21 +1,15 @@
-<!doctype html>
-
-<html lang="en">
+<!doctype html><html lang="en">
 	<head>
 		<meta charset="UTF-8"/>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="styles.css" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title>Optimize my Roblos</title>
 		<script src="/main.js" defer></script>
 		<script type="module" src="/mainModule.js" defer></script>
-		<!-- <script src="./main.js" defer></script> -->
 	</head>
 	<body>
 		<div id="panic" style="opacity: 0">
-			<img src="https://cdn.discordapp.com/emojis/1138394324082630726.gif?size=64" alt="something went wrong">
+			<h1>something went wrong 💀</h1>
 			<fieldset>
 				<legend>Error details</legend>
 				<h1 id="errortitle"></h1>
@@ -25,8 +19,7 @@
 
 		<div class="cursor-wait" id="cursor-wait-hbox">
 			<h1 class="centered" id="update_text_container">
-				<svg xmlns="http://www.w3.org/2000/svg"xmlns:xlink="http://www.w3.org/1999/xlink"style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>
-				<br>
+				<svg style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg><br>
 				Checking for updates
 			</h1>
 			<button style="position:fixed;left:50%;top:70%" class="transform-centering" id="update_bypass" onclick="hideElementById(document.getElementById('cursor-wait-hbox'));setTimeout(function(){document.getElementById('cursor-wait-hbox').remove()},280)"><p>skip</p></button>
@@ -59,12 +52,31 @@
 				<!-- <button id="btn-adv-optimizegpu" class="half-width half-height transform-none"><p>Try to optimize GPU settings</p></button> -->
 				<button id="btn-adv-mintweaks" class="half-width half-height transform-none"><p>Use a minimal set of tweaks</p></button>
 				<button id="btn-adv-mintweaks-novulkan" class="half-width half-height transform-none"><p>Minimal (no vulkan)</p></button>
-
 			</div>
 
 			<button onclick="hideElementById(closeDialogById(document.getElementById('_d_advanced')))" class="half-width" style="position: fixed; bottom: 4px; right: 4px"><p>close</p></button>
 		</dialog>
 
+		<dialog id="_d_about" style="position:fixed;left:8%;right:8%">
+			<h1>About the project</h1>
+			<p><span style="font-size: 1.5em">This project runs off 100% open source software! this includes:</span>
+				<li>The Rust Foundation (including rustc, cargo, etc)</li>
+				<li>Tauri</li>
+				<li>npm</li>
+			</p>
+			<p><span style="font-size: 1.5em">Development tools</span>
+				<li>Windows Terminal - Microsoft</li>
+				<li>VSCode - Microsoft</li>
+				<li>Neovim - github.com/neovim <i>(i literally only used this to quickly edit a batch file lol)</i></li>
+			</p>
+
+			<p>Fonts used: <b>Lexend</b>, under OFL license</p>
+
+			<br>
+			<button onclick="closeDialogById(document.getElementById('_d_about'))" class="half-height half-width transform-none"><p>close</p></button>
+		</dialog>
+
 		<p id="copyright">© 2023 WilliamAnimate. This project is licensed under MIT.</p>
+		<button onclick="openDialogById(document.getElementById('_d_about'))" class="half-height transform-none" style="position:fixed;right:5px;bottom:5px;width:100px;padding:0"><p>about</p></button>
 	</body>
 </html>

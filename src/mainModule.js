@@ -1,7 +1,7 @@
 const { invoke } = window.__TAURI__.tauri;
 
 function checkForNewVersion() {
-	const xhr = new XMLHttpRequest(); // can js please cooperate and let me make this a one-liner
+	const xhr = new XMLHttpRequest();
 	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases");
 	xhr.setRequestHeader("User-Agent", "optimize_my_roblos"); // FIXME: lmaoooo don't do this
 
@@ -14,6 +14,10 @@ function checkForNewVersion() {
 		const latest = releases[0].tag_name.slice(1);
 
 		const result = await invoke("get_version");
+		if (!/[^0-9]/.test(latest) || !/[^0-9]/.test(result)) {
+			// assume that a version is like 1.0.0*-alpha* or something similar; don't try
+			return;
+		}
 		if (latest > result) {
 			const update_text_container = document.getElementById("update_text_container");
 			const update_bypass = document.getElementById("update_bypass");
@@ -22,7 +26,7 @@ function checkForNewVersion() {
 			hideElementById(update_bypass);
 
 			setTimeout(function() {
-				update_text_container.textContent = `A new version is available: ${latest}`; // IMPORTANT: use textContent instead of innerHTML to prevent random <script> execution, IF github gets hacked
+				update_text_container.textContent = `A new version is available: ${latest}`;
 
 				update_bypass.innerHTML = "<p>ok</p>";
 
