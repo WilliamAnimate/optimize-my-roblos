@@ -3,7 +3,7 @@
 
 mod console;
 
-use crate::console::{cli_attach_to_console, show_console};
+use crate::console::cli_attach_to_console;
 use std::{path::Path, fs, env};
 
 /// returns the app version, if this is not self-documenting code then I don't know what is.
@@ -16,78 +16,83 @@ fn get_localappdata_path() -> String {
     let local_appdata_path = match std::env::var("LOCALAPPDATA") {
         Ok(path) => path,
         Err(err) => {
-            // TODO: error handling by calling the js?
-            show_console();
-            panic!("failed to get localappdata path! {}", err);
+                        // ` as first char to indicate error
+            return format!("`{}", err)
         }
     };
 
     local_appdata_path
 }
 
-fn apply_clientappsettings_json(client_settings: &[u8]) {
+fn apply_clientappsettings_json(client_settings: &[u8]) -> String {
     let local_appdata_path = get_localappdata_path();
+
+    let first_char = local_appdata_path.chars().next();
+    if first_char == Some('`') {
+        return format!("Unable to get the value of the localappdata environment variable: {}", local_appdata_path)
+    }
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
             let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
 
             if let Err(err) = fs::create_dir_all(&rblx_path) {
-                show_console();
-                panic!("Error creating folder: {}", err);
+                return format!("Error creating folder: {}", err);
             }
 
             if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                show_console();
-                panic!("Error creating file: {}", err);
+                return format!("Error creating file: {}", err).to_string();
             }
         }
         None => {
-            show_console();
-            panic!("RobloxPlayerBeta not found... do you have the game installed?");
+            return String::from("RobloxPlayerBeta not found... do you have the game installed?");
         }
     }
+
+    String::from("we gud")
 }
 
 /// the main function for optimizing
 ///
 /// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
 #[tauri::command]
-fn optimize() {
-    apply_clientappsettings_json(include_bytes!("ClientAppSettings.json"));
+fn optimize() -> String {
+    apply_clientappsettings_json(include_bytes!("ClientAppSettings.json"))
 }
 
 #[tauri::command]
-fn optimize_alt_tweaks() {
-    apply_clientappsettings_json(include_bytes!("ClientAppSettingsAlt.json"));
+fn optimize_alt_tweaks() -> String {
+    apply_clientappsettings_json(include_bytes!("ClientAppSettingsAlt.json"))
 }
 
 #[tauri::command]
-fn optimize_vulkanvoxel() {
-    apply_clientappsettings_json(include_bytes!("ClientAppVulkanVoxel.json"));
+fn optimize_vulkanvoxel() -> String {
+    apply_clientappsettings_json(include_bytes!("ClientAppVulkanVoxel.json"))
 }
 
 #[tauri::command]
-fn optimize_minimal() {
-    apply_clientappsettings_json(include_bytes!("ClientAppMinimal.json"));
+fn optimize_minimal() -> String {
+    apply_clientappsettings_json(include_bytes!("ClientAppMinimal.json"))
 }
 
 #[tauri::command]
-fn optimize_minimal_novulkan() {
-    apply_clientappsettings_json(include_bytes!("ClientAppMinimalNoVulkan.json"));
+fn optimize_minimal_novulkan() -> String {
+    apply_clientappsettings_json(include_bytes!("ClientAppMinimalNoVulkan.json"))
 }
 
 #[tauri::command]
-fn unoptimize() {
+fn unoptimize() -> String {
     let local_appdata_path = get_localappdata_path();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
-            let _ = fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path));
+            match fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path)) {
+                Ok(_) => String::from("we gud"),
+                Err(err) => return format!("wtf? {}", err)
+            }
         }
         None => {
-            show_console();
-            panic!("RobloxPlayerBeta not found... do you have the game installed?");
+            String::from("RobloxPlayerBeta not found... do you have the game installed?")
         }
     }
 }

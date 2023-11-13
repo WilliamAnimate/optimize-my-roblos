@@ -28,6 +28,6 @@ if %o% EQU 1 (
 	@REM gnu doesnt compile :crying: wtf are structs
 	@REM cargo build --target x86_64-pc-windows-gnu --profile idfk -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort
 	echo a
-) else if o EQU 0 (
+) else if %o% EQU 0 (
 	npm run tauri build
 )

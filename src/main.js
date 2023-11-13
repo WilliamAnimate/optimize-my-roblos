@@ -1,12 +1,22 @@
-let developmentMode = false;
+let developmentMode = true;
 
 const btn_advanced = document.getElementById("btn-advanced");
 
+function panicOnError(basedOn) {
+	if (basedOn !== "we gud") {
+		panic("Rust backend threw an error", basedOn);
+	}
+}
 function pollDevelopmentMode() {
 	return developmentMode;
 }
 
 function panic(title, message) {
+	document.querySelectorAll('dialog').forEach(element => {
+		element.remove();
+	});
+	document.getElementById('main-container').remove();
+
 	document.getElementById("errortitle").textContent = title;
 	document.getElementById("errormessage").textContent = message;
 

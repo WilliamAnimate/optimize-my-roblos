@@ -50,36 +50,36 @@ const mintweaksNoVulkan = document.getElementById("btn-adv-mintweaks-novulkan");
 
 optimizeBtn.addEventListener("click", async function() {
 	putLoadingAnimationOnId(optimizeBtn);
-	await invoke("optimize");
+	panicOnError(await invoke("optimize"));
 	removeLoadingAnimationOnId(optimizeBtn);
 	showElementById(document.getElementById("done-txt"));
 });
 
 unoptimizeBtn.addEventListener("click", async function() {
 	putLoadingAnimationOnId(unoptimizeBtn);
-	await invoke("unoptimize");
+	panicOnError(await invoke("unoptimize"));
 	removeLoadingAnimationOnId(unoptimizeBtn);
 });
 
 // alt tweaks
 alttweaksBtn.addEventListener("click", async function() {
 	putLoadingAnimationOnId(alttweaksBtn);
-	await invoke("optimize_alt_tweaks");
+	panicOnError(await invoke("optimize_alt_tweaks"));
 	removeLoadingAnimationOnId(alttweaksBtn);
 });
 vulkanVoxelBtn.addEventListener("click", async function() {
 	putLoadingAnimationOnId(vulkanVoxelBtn);
-	await invoke("optimize_vulkanvoxel");
+	panicOnError(await invoke("optimize_vulkanvoxel"));
 	removeLoadingAnimationOnId(vulkanVoxelBtn);
 });
 mintweaks.addEventListener("click", async function() {
 	putLoadingAnimationOnId(mintweaks);
-	await invoke("optimize_minimal");
+	panicOnError(await invoke("optimize_minimal"));
 	removeLoadingAnimationOnId(mintweaks);
 });
 mintweaksNoVulkan.addEventListener("click", async function() {
 	putLoadingAnimationOnId(mintweaksNoVulkan);
-	await invoke("optimize_minimal_novulkan");
+	panicOnError(await invoke("optimize_minimal_novulkan"));
 	removeLoadingAnimationOnId(mintweaksNoVulkan);
 });
 
