@@ -9,19 +9,21 @@ A simple and small GUI application for optimizing the roblox ClientAppSettings.j
 - [Why Optimize_my_Roblos over others?](#why-optimize_my_roblos-over-others)
 - [Why others over Optimize_my_Roblos?](#why-others-over-optimize_my_roblos)
 - [How?](#how)
+- [Troubleshooting/manually installing](#troubleshooting)
 - [Building from Source](#building-from-source)
+- [Legal](#legal)
 
 ## Why Optimize_my_Roblos over others?
 
-<!-- - Not a console gui (but its possible to use CLI mode, if you really want to.) -->
-
 - Actually has a GUI.
+
+- Some applications that promise to do the same thing as Optimize_my_Roblos are really, really big binaries, some of them being 20 megabytes; Optimize_my_Roblos is **less** than 3 megabytesa.
 
 - Does not need/have an option to stay open in the background, no need to lose that performance for no reason.
 
 - Backend is written in [Rust](https://rust-lang.org), the language that even Microsoft themselves are adopting.
 
-- Powered by 100% (F)(L)OSS. No hidden keyloggers.
+- 100% Open Source Software, powered by Open Source. No hidden malware... unlike some other ones...
 
 ## Why others over Optimize_my_Roblos?
 
@@ -42,6 +44,14 @@ Roblox offers some hidden features that allow you to tweak how the client works,
 
 If done correctly, you can make roblox significantly faster than what they give you by default, no game files modified, no threads injected, and thus, is an anticheat friendly way to optimize the game... probably, hopefully.
 
+## Troubleshooting
+
+If it isn't working, then its probably best to install it manually. Don't worry, it isn't hard.
+
+1. Find where Roblox is installed, this can usually be done by right clicking the Roblox icon and clicking `show in folder`. If it isn't there, check your start menu or search for its location.
+
+1. ok cool i forgot.
+
 ## Building from Source
 
 **Looking for downloads? It isn't here, look over [here](https://github.com/WilliamAnimate/optimize-my-roblos/releases)**.
@@ -51,7 +61,11 @@ If done correctly, you can make roblox significantly faster than what they give 
 you may or may not need the following:
 
 - [npm](https://nodejs.org) <!-- wait isn't this techinically nodejs? am i high? -->
-- [rust toolchain](https://rust-lang.org)
+- [**NIGHTLY** rust toolchain](https://rust-lang.org)
+
+> [!NOTE]
+> Versions above 1.0.0 are built using the **Rust nightly toolchain**, `rustc 1.76.0-nightly (2c1b65ee1 2023-11-11)`
+> this is so I can have a locally-compiled `std`. (2,695,680 bytes -> 2,575,872 bytes)
 
 ### then, to build
 
@@ -65,13 +79,11 @@ well, yes, but performance is already *quite fast* with Rust, and we don't need 
 
 <hr>
 
-before building in release mode, i like to use `cargo bloat` and `unused-features analyze`, but unused-features analyze probably does (some of) the work for you.
+before building in release mode, I like to use `cargo bloat` and `unused-features analyze` then `unused-features prune`. This ensures that rustc has less to compile.
 
-for early debug builds, opt-level set to `"z"` are smaller than `"s"` and `3`
+most of the time, opt-level set to `"z"` are smaller than `"s"` and `3`, but always play around to find out which ones are smaller.
 
 for all of my builds, disabling the default `compression` tauri feature results in a smaller binary size, by about ~335872 bytes (first run ever without `compression`)
-
-so you can only play around and find out.
 
 ### fixing compile errors
 
