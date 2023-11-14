@@ -1,14 +1,9 @@
-let developmentMode = true;
+let develop = true;
 
 const btn_advanced = document.getElementById("btn-advanced");
 
-function panicOnError(basedOn) {
-	if (basedOn !== "we gud") {
-		panic("Rust backend threw an error", basedOn);
-	}
-}
 function pollDevelopmentMode() {
-	return developmentMode;
+	return develop;
 }
 
 function panic(title, message) {
@@ -78,20 +73,13 @@ function removeLoadingAnimationOnId(element, newText = "<p>Done!</p>") {
 	element.innerHTML = newText;
 }
 
-if (!developmentMode) {
+if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 	setTimeout(function() {
 		// microsoft webview sucks; it displays white for like 3 seconds before actually doing something
 		// so we just ease it in
 		document.body.style.backgroundColor = "#1b1b1b";
 
-		var opacity = 0;
-		var fadein = setInterval(function () {
-			if (opacity > 1) {
-				clearInterval(fadein);
-			}
-			document.body.style.opacity = opacity;
-			opacity += 0.02;
-		}, 10);
+		document.body.classList.add("fadein");
 	}, 40);
 } else {
 	document.body.style.backgroundColor = "#1b1b1b";
@@ -101,13 +89,7 @@ if (!developmentMode) {
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
 });
-window.addEventListener('keydown', e => {
-	if (e.key == "Escape") {
-		e.preventDefault();
-	} else if (e.key == "f") {
-		e.preventDefault();
-	}
-});
+window.addEventListener('keydown', e=>{if(!develop)e.preventDefault()});
 
 btn_advanced.addEventListener("click", function() {
 	openDialogById(document.getElementById("_d_advanced"));

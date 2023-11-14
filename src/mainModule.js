@@ -16,6 +16,7 @@ function checkForNewVersion() {
 		const result = await invoke("get_version");
 		if (!/[^0-9]/.test(latest) || !/[^0-9]/.test(result)) {
 			// assume that a version is like 1.0.0*-alpha* or something similar; don't try
+			hideElementById(document.getElementById("cursor-wait-hbox"));
 			return;
 		}
 		if (latest > result) {
@@ -48,45 +49,41 @@ const vulkanVoxelBtn = document.getElementById("btn-adv-vulkanvoxel");
 const mintweaks = document.getElementById("btn-adv-mintweaks");
 const mintweaksNoVulkan = document.getElementById("btn-adv-mintweaks-novulkan");
 
-optimizeBtn.addEventListener("click", async function() {
-	putLoadingAnimationOnId(optimizeBtn);
-	panicOnError(await invoke("optimize"));
-	removeLoadingAnimationOnId(optimizeBtn);
+async function tweak(element, funct) {
+	putLoadingAnimationOnId(element);
+	if (await invoke(funct) !== "we gud") {
+		panic("Rust backend threw an error", basedOn);
+	}
+	showElementById(element);
+}
+
+optimizeBtn.addEventListener("click", function() {
+	tweak(optimizeBtn, "optimize");
 	showElementById(document.getElementById("done-txt"));
 });
 
-unoptimizeBtn.addEventListener("click", async function() {
-	putLoadingAnimationOnId(unoptimizeBtn);
-	panicOnError(await invoke("unoptimize"));
-	removeLoadingAnimationOnId(unoptimizeBtn);
+unoptimizeBtn.addEventListener("click", function() {
+	tweak(unoptimizeBtn, "unoptimize");
 });
 
 // alt tweaks
-alttweaksBtn.addEventListener("click", async function() {
-	putLoadingAnimationOnId(alttweaksBtn);
-	panicOnError(await invoke("optimize_alt_tweaks"));
-	removeLoadingAnimationOnId(alttweaksBtn);
+alttweaksBtn.addEventListener("click", function() {
+	tweak(alttweaksBtn, "optimize_alt_tweaks");
 });
-vulkanVoxelBtn.addEventListener("click", async function() {
-	putLoadingAnimationOnId(vulkanVoxelBtn);
-	panicOnError(await invoke("optimize_vulkanvoxel"));
-	removeLoadingAnimationOnId(vulkanVoxelBtn);
+vulkanVoxelBtn.addEventListener("click", function() {
+	tweak(vulkanVoxelBtn, "optimize_vulkanvoxel");
 });
-mintweaks.addEventListener("click", async function() {
-	putLoadingAnimationOnId(mintweaks);
-	panicOnError(await invoke("optimize_minimal"));
-	removeLoadingAnimationOnId(mintweaks);
+mintweaks.addEventListener("click", function() {
+	tweak(mintweaks, "optimize_minimal")
 });
-mintweaksNoVulkan.addEventListener("click", async function() {
-	putLoadingAnimationOnId(mintweaksNoVulkan);
-	panicOnError(await invoke("optimize_minimal_novulkan"));
-	removeLoadingAnimationOnId(mintweaksNoVulkan);
+mintweaksNoVulkan.addEventListener("click", function() {
+	tweak(mintweaksNoVulkan, "optimize_minimal_novulkan");
 });
 
-invoke("get_version").then((result) => {
-	document.getElementById("version").textContent = "v" + result;
-}).catch((error) => {
-	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem in the Rust backend.", error);
+invoke("get_version").then((ver) => {
+	document.getElementById("version").textContent = "v" + ver;
+}).catch((err) => {
+	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem in the Rust backend.", err);
 });
 
 if (!pollDevelopmentMode()) {
