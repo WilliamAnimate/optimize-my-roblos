@@ -80,6 +80,7 @@ if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 		document.body.style.backgroundColor = "#1b1b1b";
 
 		document.body.classList.add("fadein");
+		document.body.style.opacity = 1;
 	}, 40);
 } else {
 	document.body.style.backgroundColor = "#1b1b1b";
