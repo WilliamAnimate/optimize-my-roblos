@@ -1671,6 +1671,7 @@ version = "1.1.0-alpha"
 dependencies = [
  "tauri",
  "tauri-build",
+ "winreg",
 ]
 
 [[package]]

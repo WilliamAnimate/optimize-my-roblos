@@ -6,6 +6,8 @@ mod console;
 use crate::console::cli_attach_to_console;
 use std::{path::Path, fs, env};
 
+use winreg::{enums::*, RegKey};
+
 /// returns the app version, if this is not self-documenting code then I don't know what is.
 #[tauri::command]
 fn get_version() -> String {
@@ -66,18 +68,43 @@ fn optimize_alt_tweaks() -> String {
 }
 
 #[tauri::command]
-fn optimize_vulkanvoxel() -> String {
-    apply_clientappsettings_json(include_bytes!("ClientAppVulkanVoxel.json"))
-}
-
-#[tauri::command]
-fn optimize_minimal() -> String {
-    apply_clientappsettings_json(include_bytes!("ClientAppMinimal.json"))
-}
-
-#[tauri::command]
 fn optimize_minimal_novulkan() -> String {
     apply_clientappsettings_json(include_bytes!("ClientAppMinimalNoVulkan.json"))
+}
+
+#[tauri::command]
+fn optimize_gpu_settings() -> String {
+    println!("This code has no error handling! Press any key to execute.");
+    std::io::stdin().read_line(&mut String::new()).unwrap();
+
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+
+    let local_appdata_path = get_localappdata_path();
+
+    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+        Some(result_folder_name) => {
+            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
+
+            let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
+            let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
+            // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
+
+            let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
+            let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
+            // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
+
+            // note: clone the rblx_path so it doesn't mess things up
+            let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
+            let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
+            // key_perf_options.set_value("CpuPriorityClass", &"3");
+
+            String::from("we gud")
+        }
+        None => String::from("RobloxPlayerBeta not found... do you have the game installed?")
+    }
+
+    // Ok(())
 }
 
 #[tauri::command]
@@ -139,8 +166,7 @@ fn main() {
             optimize,
             optimize_alt_tweaks,
             optimize_minimal_novulkan,
-            optimize_minimal,
-            optimize_vulkanvoxel,
+            optimize_gpu_settings,
             unoptimize
         ])
 

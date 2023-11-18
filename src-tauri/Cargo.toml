@@ -7,6 +7,9 @@ description = "Optimize my Roblox!"
 license = "MIT"
 repository = "https://github.com/williamanimate/optimize-my-roblos/"
 
+[dependencies]
+winreg = "0.51.0"
+
 [dependencies.tauri]
 version = "1.5"
 features = ["shell-open", "shell-open-api", "wry", "tauri-runtime-wry", "open"]

@@ -45,9 +45,7 @@ function checkForNewVersion() {
 const optimizeBtn = document.getElementById("btn-optimize");
 const unoptimizeBtn = document.getElementById("btn-unoptimize");
 const alttweaksBtn = document.getElementById("btn-adv-alttweaks");
-const vulkanVoxelBtn = document.getElementById("btn-adv-vulkanvoxel");
 const mintweaks = document.getElementById("btn-adv-mintweaks");
-const mintweaksNoVulkan = document.getElementById("btn-adv-mintweaks-novulkan");
 
 async function tweak(element, funct) {
 	putLoadingAnimationOnId(element);
@@ -70,14 +68,8 @@ unoptimizeBtn.addEventListener("click", function() {
 alttweaksBtn.addEventListener("click", function() {
 	tweak(alttweaksBtn, "optimize_alt_tweaks");
 });
-vulkanVoxelBtn.addEventListener("click", function() {
-	tweak(vulkanVoxelBtn, "optimize_vulkanvoxel");
-});
 mintweaks.addEventListener("click", function() {
-	tweak(mintweaks, "optimize_minimal")
-});
-mintweaksNoVulkan.addEventListener("click", function() {
-	tweak(mintweaksNoVulkan, "optimize_minimal_novulkan");
+	tweak(mintweaks, "optimize_minimal_novulkan"); // vulkan crashes on windows...?
 });
 
 invoke("get_version").then((ver) => {
