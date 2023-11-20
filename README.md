@@ -50,7 +50,13 @@ If it isn't working, then its probably best to install it manually. Don't worry,
 
 1. Find where Roblox is installed, this can usually be done by right clicking the Roblox icon and clicking `show in folder`. If it isn't there, check your start menu or search for its location.
 
-1. ok cool i forgot.
+1. Create a new folder called `ClientSettings`
+
+1. Create a file called `ClientAppSettings.json`
+
+1. Copy and paste [this code](https://github.com/WilliamAnimate/optimize-my-roblos/blob/main/src-tauri/src/ClientAppSettings.json) into `ClientAppSettings.json`
+
+1. Win your games because you aren't playing on what looks like a slideshow
 
 ## Building from Source
 
