@@ -19,7 +19,7 @@ A simple and small GUI application for optimizing the roblox ClientAppSettings.j
 
 - Actually has a GUI.
 
-- Some applications that promise to do the same thing as Optimize_my_Roblos are really, really big binaries, some of them being 20 megabytes; Optimize_my_Roblos is **less** than 3 megabytesa.
+- Some applications that promise to do the same thing as Optimize_my_Roblos are really, really big binaries, some of them being 20 megabytes; Optimize_my_Roblos is **less** than 3 megabytes.
 
 - Does not need/have an option to stay open in the background, no need to lose that performance for no reason.
 
