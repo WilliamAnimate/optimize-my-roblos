@@ -1,5 +1,3 @@
-let develop = true;
-
 const btn_advanced = document.getElementById("btn-advanced");
 
 function pollDevelopmentMode() {
@@ -86,11 +84,6 @@ if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 	document.body.style.backgroundColor = "#1b1b1b";
 	document.body.style.opacity = 1;
 }
-
-window.addEventListener('contextmenu', e => {
-	e.preventDefault();
-});
-window.addEventListener('keydown', e=>{if(!develop)e.preventDefault()});
 
 btn_advanced.addEventListener("click", function() {
 	openDialogById(document.getElementById("_d_advanced"));

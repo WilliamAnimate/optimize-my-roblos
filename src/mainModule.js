@@ -49,8 +49,9 @@ const mintweaks = document.getElementById("btn-adv-mintweaks");
 
 async function tweak(element, funct) {
 	putLoadingAnimationOnId(element);
-	if (await invoke(funct) !== "we gud") {
-		panic("Rust backend threw an error", basedOn);
+	let result = await invoke(funct);
+	if (result !== "we gud") {
+		panic("Rust backend threw an error", result);
 	}
 	showElementById(element);
 }
