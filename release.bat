@@ -1,6 +1,6 @@
 @echo off
 
-set /p "option=build with self-built STD? [Y/n] "
+set /p "option=build with self-built STD? [y/n] "
 
 if not defined option (
 	exit 1
@@ -24,10 +24,8 @@ if %o% EQU 1 (
 	cd src-tauri
 
 	cargo build --target x86_64-pc-windows-msvc --profile idfk -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort
-
-	@REM gnu doesnt compile :crying: wtf are structs
-	@REM cargo build --target x86_64-pc-windows-gnu --profile idfk -Z build-std=std,panic_abort -Z build-std-features=panic_immediate_abort
-	echo a
+	echo mk, done building with self-built standard library
 ) else if %o% EQU 0 (
-	npm run tauri build
+	cargo tauri build
+	echo mk, done building
 )
