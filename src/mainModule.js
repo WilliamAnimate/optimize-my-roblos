@@ -1,4 +1,4 @@
-const { invoke } = window.__TAURI__.tauri;
+const invoke = window.__TAURI__.invoke
 
 function checkForNewVersion() {
 	const xhr = new XMLHttpRequest();
