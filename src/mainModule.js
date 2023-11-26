@@ -44,20 +44,28 @@ function checkForNewVersion() {
 
 const optimizeBtn = document.getElementById("btn-optimize");
 const unoptimizeBtn = document.getElementById("btn-unoptimize");
-const alttweaksBtn = document.getElementById("btn-adv-alttweaks");
-const mintweaks = document.getElementById("btn-adv-mintweaks");
+const nineteenSeventyFiveTweaksBtn = document.getElementById("btn-adv-1975");
+const officeTweaksBtn = document.getElementById("btn-adv-office");
+const perfTweaksBtn = document.getElementById("btn-adv-perf");
+const optimizeGpuBtn = document.getElementById("btn-adv-optimizegpu");
 
 async function tweak(element, funct) {
 	putLoadingAnimationOnId(element);
-	let result = await invoke(funct);
+	try {
+		var result = await invoke(funct); // use var to keep it declared for the rest of the function
+		// FINALLY a use case for var.
+	} catch (e) {
+		panic("Failed to call the optimize function", e + ". Result info: " + result);
+	}
 	if (result !== "we gud") {
 		panic("Rust backend threw an error", result);
 	}
-	showElementById(element);
+	removeLoadingAnimationOnId(element);
+	// showElementById(element);
 }
 
-optimizeBtn.addEventListener("click", function() {
-	tweak(optimizeBtn, "optimize");
+optimizeBtn.addEventListener("click", async function() {
+	await tweak(optimizeBtn, "optimize_lowspec"); // assume the user is on a slow machine, why else would they be here?
 	showElementById(document.getElementById("done-txt"));
 });
 
@@ -65,12 +73,17 @@ unoptimizeBtn.addEventListener("click", function() {
 	tweak(unoptimizeBtn, "unoptimize");
 });
 
-// alt tweaks
-alttweaksBtn.addEventListener("click", function() {
-	tweak(alttweaksBtn, "optimize_alt_tweaks");
+nineteenSeventyFiveTweaksBtn.addEventListener("click", function() {
+	tweak(nineteenSeventyFiveTweaksBtn, "optimize_1975");
 });
-mintweaks.addEventListener("click", function() {
-	tweak(mintweaks, "optimize_minimal_novulkan"); // vulkan crashes on windows...?
+officeTweaksBtn.addEventListener("click", function() {
+	tweak(officeTweaksBtn, "optimize_office");
+});
+perfTweaksBtn.addEventListener("click", function() {
+	tweak(perfTweaksBtn, "optimize_perf");
+});
+optimizeGpuBtn.addEventListener("click", function() {
+	tweak(optimizeGpuBtn, "optimize_gpu_settings");
 });
 
 invoke("get_version").then((ver) => {

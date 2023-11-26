@@ -58,25 +58,27 @@ fn apply_clientappsettings_json(client_settings: &[u8]) -> String {
 ///
 /// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
 #[tauri::command]
-fn optimize() -> String {
-    apply_clientappsettings_json(include_bytes!("ClientAppSettings.json"))
+fn optimize_perf() -> String {
+    apply_clientappsettings_json(include_bytes!("CAS_perf.json"))
 }
 
 #[tauri::command]
-fn optimize_alt_tweaks() -> String {
-    apply_clientappsettings_json(include_bytes!("ClientAppSettingsAlt.json"))
+fn optimize_1975() -> String {
+    apply_clientappsettings_json(include_bytes!("CAS_1975.json"))
 }
 
 #[tauri::command]
-fn optimize_minimal_novulkan() -> String {
-    apply_clientappsettings_json(include_bytes!("ClientAppMinimalNoVulkan.json"))
+fn optimize_lowspec() -> String {
+    apply_clientappsettings_json(include_bytes!("CAS_lowspec.json"))
+}
+
+#[tauri::command]
+fn optimize_office() -> String {
+    apply_clientappsettings_json(include_bytes!("CAS_office.json"))
 }
 
 #[tauri::command]
 fn optimize_gpu_settings() -> String {
-    println!("This code has no error handling! Press any key to execute.");
-    std::io::stdin().read_line(&mut String::new()).unwrap();
-
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
@@ -139,8 +141,8 @@ fn main() {
         // for (index, _argument) in args.iter().enumerate().skip(1) {
         match args.get(1).map(|arg| arg.as_str()) {
             Some("-optimizenow") | Some("-o") => {
-                optimize();
-                println!("Optimization done!");
+                // optimize();
+                println!("Nah xd not in this build");
             },
             Some("-help") | Some("-h") => {
                 println!("=== HELP ===");
@@ -163,9 +165,10 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_version,
-            optimize,
-            optimize_alt_tweaks,
-            optimize_minimal_novulkan,
+            optimize_perf,
+            optimize_1975,
+            optimize_lowspec,
+            optimize_office,
             optimize_gpu_settings,
             unoptimize
         ])
