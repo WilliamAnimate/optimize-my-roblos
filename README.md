@@ -4,6 +4,8 @@
 
 A simple and small GUI application for optimizing the roblox ClientAppSettings.json file.
 
+[Optimize my Roblos is based off robloxpotatofflags fflags](https://rentry.co/robloxpotatofflags)
+
 ## Table of contents
 
 - [Why Optimize_my_Roblos over others?](#why-optimize_my_roblos-over-others)
