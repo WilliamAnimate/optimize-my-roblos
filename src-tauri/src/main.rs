@@ -11,8 +11,8 @@ use winreg::{enums::*, RegKey};
 use lazy_static::lazy_static;
 
 lazy_static!(
-    // static ref LAST_ERROR: Mutex<&'static str> = Mutex::new("No error details were set.");
     static ref LAST_ERROR: Mutex<String> = Mutex::new(String::from("No error details were set."));
+    static ref LOCALAPPDATA_PATH: Mutex<String> = Mutex::new(init_get_local_appdata_path());
 );
 
 /// finds the roblox working directory. this code assumes that:
@@ -45,14 +45,13 @@ fn find_roblox_exe(directory: &Path) -> Option<String> {
     None
 }
 
-
-fn get_localappdata_path() -> String {
+/// don't call this function, its only here to get the appdata path
+fn init_get_local_appdata_path() -> String {
     let local_appdata_path = match std::env::var("LOCALAPPDATA") {
         Ok(path) => path,
-        Err(err) => {
-                        // ` as first char to indicate error
-            return format!("`{}", err)
-        }
+        Err(err) => panic!("gg {}", err) // you DO know the user is already beyond messed up if %localappdata% isn't an environment variable.
+        // sure you may want to debloat/harden it but this is just too damn far bro
+        // TODO: add check at the start so if this function breakks we can actually report it to the user instead of crashing instantly
     };
 
     local_appdata_path
@@ -67,16 +66,9 @@ fn set_error(error_str: String) -> bool {
     true
 }
 
+/// the actual code responsible for optimizing this.
 fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
-    let local_appdata_path = get_localappdata_path();
-
-    let first_char = local_appdata_path.chars().next();
-    if first_char == Some('`') {
-        // return format!("Unable to get the value of the localappdata environment variable: {}", local_appdata_path)
-        set_error(format!("Unable to get the value of the localappdata environment variable: {}", local_appdata_path));
-
-        return false;
-    }
+    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
@@ -117,9 +109,6 @@ fn get_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 
-/// the main function for optimizing
-///
-/// this function requires the function `find_roblox_exe`, it'll do the rest, assuming `ClientAppSettings.json` is included in the same directory as this file.
 #[tauri::command]
 fn optimize_perf() -> bool {
     apply_clientappsettings_json(include_bytes!("CAS_perf.json"))
@@ -145,7 +134,7 @@ fn optimize_gpu_settings() -> bool {
     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
     // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-    let local_appdata_path = get_localappdata_path();
+    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
@@ -178,7 +167,7 @@ fn optimize_gpu_settings() -> bool {
 
 #[tauri::command]
 fn unoptimize() -> bool {
-    let local_appdata_path = get_localappdata_path();
+    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
