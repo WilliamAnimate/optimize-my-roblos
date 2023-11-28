@@ -1,5 +1,19 @@
 const { invoke } = window.__TAURI__.tauri;
 
+let lastError; // this variable exists because im too lazy to make a function return promises.
+
+/**
+ * call this function with `await`, then get the value of lastError.
+ * @returns does not.
+ */
+async function getLastError() {
+	try {
+		lastError = await invoke("get_last_error");
+	} catch (e) {
+		panic("i quit my job, the error handler can't even get an error", "WTF DID YOU DO??? " + e);
+	}
+}
+
 function checkForNewVersion() {
 	const xhr = new XMLHttpRequest();
 	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases");
@@ -55,13 +69,15 @@ async function tweak(element, funct) {
 		var result = await invoke(funct); // use var to keep it declared for the rest of the function
 		// FINALLY a use case for var.
 	} catch (e) {
-		panic("Failed to call the optimize function", e + ". Result info: " + result);
+		panic("Failed to call the optimize function, does it exist?", e + ". Result info: " + result);
+		// print result here because the error of js is stored in result
+		// ... i think.
 	}
-	if (result !== "we gud") {
-		panic("Rust backend threw an error", result);
+	if (result !== true) {
+		await getLastError();
+		panic("Backend threw an error", lastError);
 	}
 	removeLoadingAnimationOnId(element);
-	// showElementById(element);
 }
 
 optimizeBtn.addEventListener("click", async function() {
