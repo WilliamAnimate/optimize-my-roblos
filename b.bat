@@ -1,2 +1,2 @@
 @echo off
-npm run tauri dev
+cargo tauri dev

@@ -1,4 +1,4 @@
-const { invoke } = window.__TAURI__.tauri;
+const invoke = window.__TAURI__.invoke
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
