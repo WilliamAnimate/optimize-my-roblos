@@ -1,4 +1,4 @@
-let develop = true;
+let develop = false;
 
 // run this file with `async` boolean attribute
 // this file contains code that should be used everywhere here.
