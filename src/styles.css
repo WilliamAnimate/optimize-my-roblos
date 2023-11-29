@@ -214,8 +214,3 @@ dialog {
 
 	transition: opacity 0.3s, transform 0.3s;
 }
-
-.flexbox-row {
-	display: flexbox;
-	flex-direction: row;
-}
