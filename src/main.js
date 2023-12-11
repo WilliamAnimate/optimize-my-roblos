@@ -1,9 +1,13 @@
-const invoke = window.__TAURI__.invoke
+//const invoke = window.__TAURI__.invoke
 const btn_advanced = document.getElementById("btn-advanced");
+
+function invoke(a) {
+	console.log(a);
+}
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
-let develop = false;
+let develop = true;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
@@ -179,7 +183,7 @@ if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 	setTimeout(function() {
 		// microsoft webview sucks; it displays white for like 3 seconds before actually doing something
 		// so we just ease it in
-		document.body.style.backgroundColor = "#1b1b1b";
+		document.body.style.backgroundColor = "#000";
 
 		document.body.classList.add("fadein");
 		document.body.style.opacity = 1;
