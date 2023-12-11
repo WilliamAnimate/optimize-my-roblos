@@ -2,10 +2,11 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8"/>
-		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="styles.css"/>
+		<link rel="stylesheet" href="browser.css"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<title>Optimize my Roblos</title>
-		<script src="/main.js" defer></script>
+		<script src="./main.js" defer></script>
 	</head>
 	<body>
 		<div id="panic" style="opacity: 0">
@@ -27,18 +28,11 @@
 		<div id="main-container">
 			<h1 id="title">Optimize my Roblos<br><span id="version"></span></h1>
 			<br>
-			<p>
-				<b>What does this do?</b>
-				<li>Unlocks your FPS</li>
-				<li>Disable telemetry</li>
-				<li>Optimize caching</li>
-				<a href="https://github.com/WilliamAnimate/optimize-my-roblos#how" target="_blank">Click here to read more</a>
-				<br>
-				Please note that frame-rate or response times aren't guarnteed to be improved; every system and configuration is different.
-			</p>
-			<p id="done-txt" class="hidden">Next steps: open roblox and check the graphics settings, if there are 21 options, then it means that it worked!</p>
+			<p>Please note that frame-rate or response times aren't guarnteed to be improved; every system and configuration is different.</p>
+			<p id="done-txt" class="hidde">Next steps: open roblox and check the graphics settings, if there are 21 options, then it means that it worked!</p>
 			<button id="btn-optimize" class="transform-centering"><p>Optimize!</p></button>
 			<button id="btn-unoptimize" class="half-width half-height secondary-btn left transform-centering"><p>Remove tweaks</p></button>
+			<button id="btn-studio" class="transform-centering"><p>Optimize Studio</p></button>
 			<button id="btn-advanced" class="half-width half-height secondary-btn right transform-centering"><p>Advanced</p></button>
 		</div>
 
