@@ -200,26 +200,40 @@ fn main() {
         println!("Optimize_my_Roblos version {}", get_version());
         println!("Keep in mind that the updater is NOT present in CLI mode.");
 
-        // for (index, _argument) in args.iter().enumerate().skip(1) {
         match args.get(1).map(|arg| arg.as_str()) {
             Some("-optimize") | Some("-o") => {
                 match args.get(1).map(|arg| arg.as_str()) {
                     Some("perf") => {
-                        optimize_perf();
+                        if !optimize_perf() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
                     }
                     Some("nineteenseventyfive") | Some("1975") => {
-                        optimize_1975();
+                        if !optimize_1975() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
                     }
                     Some("lowspec") => {
-                        optimize_lowspec();
+                        if !optimize_lowspec() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
                     }
                     Some("office") => {
-                        optimize_office();
+                        if !optimize_office() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    _ => {
+                        todo!("select it in command line mode instead of typing the entire thing idfk")
                     }
                 }
-                    // optimize();
-                // println!("Nah xd not in this build");
-            },
+            }
+            Some("-unoptimize") | Some("-u") => {
+                println!("removing tweaks");
+                if !unoptimize() {
+                    println!("Failed to remove optimizations: {}", get_last_error());
+                }
+            }
             Some("-help") | Some("-h") => {
                 println!("=== HELP ===");
                 println!("If this is an actual plea for help, this isn't the right place.");
@@ -231,7 +245,6 @@ fn main() {
                 println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
             }
         }
-        // }
 
         println!("press any key to exit");
         std::process::exit(420);
