@@ -59,11 +59,11 @@ body, button {
 	transform: translate(-50%, -50%);
 }
 
-.fadeout {animation: fadeout 300ms}
-.fadein {animation: fadeout 300ms reverse}
-@keyframes fadeout {
-	from {opacity:1}
-	to {opacity:0}
+.fadein {animation: fadein 300ms}
+.fadeout {animation: fadeout 300ms reverse}
+@keyframes fadein {
+	from {opacity:0}
+	to {opacity:1}
 }
 
 a {color: #00aeff}
