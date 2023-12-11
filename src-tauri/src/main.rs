@@ -202,9 +202,23 @@ fn main() {
 
         // for (index, _argument) in args.iter().enumerate().skip(1) {
         match args.get(1).map(|arg| arg.as_str()) {
-            Some("-optimizenow") | Some("-o") => {
-                // optimize();
-                println!("Nah xd not in this build");
+            Some("-optimize") | Some("-o") => {
+                match args.get(1).map(|arg| arg.as_str()) {
+                    Some("perf") => {
+                        optimize_perf();
+                    }
+                    Some("nineteenseventyfive") | Some("1975") => {
+                        optimize_1975();
+                    }
+                    Some("lowspec") => {
+                        optimize_lowspec();
+                    }
+                    Some("office") => {
+                        optimize_office();
+                    }
+                }
+                    // optimize();
+                // println!("Nah xd not in this build");
             },
             Some("-help") | Some("-h") => {
                 println!("=== HELP ===");
