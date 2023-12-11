@@ -60,7 +60,7 @@ body, button {
 }
 
 .fadein {animation: fadein 300ms}
-.fadeout {animation: fadeout 300ms reverse}
+.fadeout {animation: fadein 300ms reverse}
 @keyframes fadein {
 	from {opacity:0}
 	to {opacity:1}
@@ -111,7 +111,7 @@ a {color: #00aeff}
 #done-txt {
 	position: fixed;
 	left: 50%;
-	top: 48%;
+	top: 38%;
 	transform: translate(-50%, -50%);
 	color: lightgreen;
 }
@@ -119,7 +119,13 @@ a {color: #00aeff}
 #btn-optimize {
 	position: fixed;
 	left: 50%;
-	top: 60%;
+	top: 50%;
+}
+
+#btn-studio {
+	position: fixed;
+	left: 50%;
+	top: 63.5%;
 }
 
 .transform-centering {transform: translate(-50%, -50%)}
@@ -133,7 +139,7 @@ button.half-height {height: 60px}
 button.half-height p {font-size: 0.6em}
 button.secondary-btn {
 	position:fixed;
-	top: 72%;
+	top: 75.5%;
 }
 button.secondary-btn.left {
 	left: 300px
