@@ -1,11 +1,25 @@
 :root {
 	--color-bg: #000;
 	--color-bg-translucent: #00000062;
-	--color-bg--secondary: #141414;
+	--color-bg-secondary: #141414;
 	--color-text: #fff;
 	--color-text-secondary: #b4b4b4; /* :before (real) */
 	--color-button-default: #101010;
 	--color-button-hover: #fff;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--color-bg: #fff;
+		--color-bg-translucent: #ffffff62;
+		--color-bg-secondary: #ebebeb;
+		--color-text: #000;
+		--color-text-secondary: #4b4b4b;
+		/* note: buttons won't be inverted, as visibility is terrible for some reason
+		or is that just my monitor */
+		--color-button-default: #e4e4e4;
+		--color-button-hover: #000;
+	}
 }
 
 @font-face {
@@ -218,7 +232,7 @@ button:hover::before {transform: skewX(0deg) translateY(0%)}
 
 dialog {
 	padding: 30px;
-	background-color: var(--color-bg--secondary);
+	background-color: var(--color-bg-secondary);
 	border-radius: 1ex;
 	color: var(--color-text);
 	border: none;

@@ -1,7 +1,10 @@
-const invoke = window.__TAURI__.invoke
+// const invoke = window.__TAURI__.invoke
 const btn_advanced = document.getElementById("btn-advanced");
 
-// function invoke(a){console.log(a)}
+/**
+ * development purposes only; so you don't ACTUALLY call the rust backend
+ */
+function invoke(a){console.log(`invoked function: ${a}`);return "hi";}
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
@@ -186,13 +189,13 @@ if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 	setTimeout(function() {
 		// microsoft webview sucks; it displays white for like 3 seconds before actually doing something
 		// so we just ease it in
-		document.body.style.backgroundColor = "#000";
+		document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
 
 		document.body.classList.add("fadein");
 		document.body.style.opacity = 1;
 	}, 40);
 } else {
-	document.body.style.backgroundColor = "#1b1b1b";
+	document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
 	document.body.style.opacity = 1;
 }
 
