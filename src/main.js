@@ -1,9 +1,7 @@
-//const invoke = window.__TAURI__.invoke
+const invoke = window.__TAURI__.invoke
 const btn_advanced = document.getElementById("btn-advanced");
 
-function invoke(a) {
-	console.log(a);
-}
+// function invoke(a){console.log(a)}
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
@@ -84,6 +82,7 @@ async function tweak(element, funct) {
 }
 
 const optimizeBtn = document.getElementById("btn-optimize");
+const studioBtn = document.getElementById("btn-studio");
 const unoptimizeBtn = document.getElementById("btn-unoptimize");
 const nineteenSeventyFiveTweaksBtn = document.getElementById("btn-adv-1975");
 const officeTweaksBtn = document.getElementById("btn-adv-office");
@@ -93,6 +92,10 @@ const optimizeGpuBtn = document.getElementById("btn-adv-optimizegpu");
 optimizeBtn.addEventListener("click", async function() {
 	await tweak(optimizeBtn, "optimize_lowspec"); // assume the user is on a slow machine, why else would they be here?
 	showElementById(document.getElementById("done-txt"));
+});
+
+studioBtn.addEventListener("click", function() {
+	tweak(studioBtn, "apply_studio_config_json");
 });
 
 unoptimizeBtn.addEventListener("click", function() {
