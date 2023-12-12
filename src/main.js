@@ -185,19 +185,30 @@ function removeLoadingAnimationOnId(element, newText = "<p>Done!</p>") {
 	element.innerHTML = newText;
 }
 
-if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
-	setTimeout(function() {
-		// microsoft webview sucks; it displays white for like 3 seconds before actually doing something
-		// so we just ease it in
-		document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
+function initSetTheme() {
+	if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
+		setTimeout(function() {
+			// microsoft webview sucks; it displays white for like 3 seconds before actually doing something
+			// so we just ease it in
+			document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
 
-		document.body.classList.add("fadein");
+			// could adding fadein cause a significant problem? TODO: test this later
+			document.body.classList.add("fadein");
+			document.body.style.opacity = 1;
+		}, 40);
+	} else {
+		document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
 		document.body.style.opacity = 1;
-	}, 40);
-} else {
-	document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
-	document.body.style.opacity = 1;
+	}
 }
+
+initSetTheme();
+
+// background is handled by js; we need this.
+// attribution: https://stackoverflow.com/questions/59621784/how-to-detect-prefers-color-scheme-change-in-javascript
+// TODO: one liner this someday
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => e.matches && initSetTheme());
+window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", e => e.matches && initSetTheme());
 
 btn_advanced.addEventListener("click", function() {
 	openDialogById(document.getElementById("_d_advanced"));
