@@ -4,7 +4,7 @@ const btn_advanced = document.getElementById("btn-advanced");
 /**
  * development purposes only; so you don't ACTUALLY call the rust backend
  */
-function invoke(a){console.log(`invoked function: ${a}`);return "hi";}
+function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
@@ -216,8 +216,6 @@ btn_advanced.addEventListener("click", function() {
 
 invoke("get_version").then((ver) => {
 	document.getElementById("version").textContent = "v" + ver;
-}).catch((err) => {
-	panic("[mainModule]: Failed to fetch version. This could indicate at a severe problem in the Rust backend.", err);
 });
 
 if (!develop) {
