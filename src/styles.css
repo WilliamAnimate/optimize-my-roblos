@@ -1,3 +1,13 @@
+:root {
+	--color-bg: #000;
+	--color-bg-translucent: #00000062;
+	--color-bg--secondary: #141414;
+	--color-text: #fff;
+	--color-text-secondary: #b4b4b4; /* :before (real) */
+	--color-button-default: #101010;
+	--color-button-hover: #fff;
+}
+
 @font-face {
 	font-family: Lexend;
 	src: url(Lexend-Regular.ttf);
@@ -14,7 +24,7 @@
 	position: fixed;
 	top: 0px;
 	left: 0px;
-	background-color: #000;
+	background-color: var(--color-bg);
 	width: 100vw;
 	height: 100vh;
 	z-index: -99; /* ensure never overlapping something */
@@ -23,7 +33,7 @@
 .onTop {z-index:9999 !important}
 
 body {
-	color: #fff;
+	color: var(--color-text);
 	text-align: center;
 	user-select: none;
 	overflow: hidden;
@@ -40,7 +50,7 @@ body, button {
 
 * {margin: 1px}
 *:focus-visible {
-	outline: #fff dotted 2px;
+	outline: var(--color-text) dotted 2px;
 	transition: none;
 }
 
@@ -76,7 +86,7 @@ a {color: #00aeff}
 	width: 100vw;
 	height: 100vh;
 
-	background-color: #00000062;
+	background-color: var(--color-bg-translucent);
 
 	z-index: 9999;
 }
@@ -93,7 +103,7 @@ a {color: #00aeff}
 #title span {
 	transform: rotate(1.4deg);
 	font-size: 0.6em;
-	color: #b4b4b4;
+	color: var(--color-text-secondary);
 
 	position: absolute;
 	bottom: -0.5em;
@@ -105,7 +115,7 @@ a {color: #00aeff}
 	left: 5px;
 	bottom: 5px;
 	margin: 0px;
-	color: #858585;
+	color: var(--color-text-secondary);
 }
 
 #done-txt {
@@ -149,7 +159,7 @@ button.secondary-btn.right {
 }
 
 button {
-	background-color: #101010;
+	background-color: var(--color-button-default);
 	padding: 0.6em 1.2em;
 	border: none;
 	border-radius: 1ex;
@@ -167,7 +177,7 @@ button {
 }
 
 button::before {
-	background-color: #fff;
+	background-color: var(--color-button-hover);
 	content: '';
 	position: absolute;
 	width: 100%;
@@ -184,17 +194,13 @@ button p {
 	position: relative;
 	margin: 0px;
 	padding: 0px;
-	color: #fff;
+	color: var(--color-text);
 
-	transition: color 300ms;
+	transition: filter 300ms;
 	z-index: 100;
 }
-button:not([disabled]):hover p {
-	color: #000;
-}
-button:hover::before {
-	transform: skewX(0deg) translateY(0%);
-}
+button:not([disabled]):hover p {filter: invert(100%)}
+button:hover::before {transform: skewX(0deg) translateY(0%)}
 
 @keyframes spin-infinite {
 	0%{stroke-dasharray:0.01px 43.97px;transform:rotate(0deg)}
@@ -212,11 +218,10 @@ button:hover::before {
 
 dialog {
 	padding: 30px;
-	background-color: #141414;
-	border: #fff;
+	background-color: var(--color-bg--secondary);
 	border-radius: 1ex;
-	color: #eee;
-	border: transparent;
+	color: var(--color-text);
+	border: none;
 
 	transition: opacity 0.3s, transform 0.3s;
 }
