@@ -6,6 +6,7 @@
 	--color-text-secondary: #b4b4b4; /* :before (real) */
 	--color-button-default: #101010;
 	--color-button-hover: #fff;
+	--color-button-text-hover-inverted: #000; /* --color-text dictates the default color */
 }
 
 @media (prefers-color-scheme: light) {
@@ -19,6 +20,7 @@
 		or is that just my monitor */
 		--color-button-default: #e4e4e4;
 		--color-button-hover: #000;
+		--color-button-text-hover-inverted: #fff;
 	}
 }
 
@@ -210,10 +212,10 @@ button p {
 	padding: 0px;
 	color: var(--color-text);
 
-	transition: filter 300ms;
+	transition: color 300ms;
 	z-index: 100;
 }
-button:not([disabled]):hover p {filter: invert(100%)}
+button:not([disabled]):hover p {color: var(--color-button-text-hover-inverted)}
 button:hover::before {transform: skewX(0deg) translateY(0%)}
 
 @keyframes spin-infinite {
