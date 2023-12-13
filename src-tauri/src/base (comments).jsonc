@@ -7,7 +7,7 @@
 {
 // unlock FPS, i'll assume that since you're trying to optimize-your-roblos, your screen refresh rate is 60.
 // 60*2=120
-"DFIntTaskSchedulerTargetFps": "120", // higher fps cap and actually reaching it can reduce input delay
+"DFIntTaskSchedulerTargetFps": "999", // higher fps cap and actually reaching it can reduce input delay
 // general fflags (based on RCO flags)
 // it looks likke this can slightly improve perf?
 "FFlagHandleAltEnterFullscreenManually": false,
