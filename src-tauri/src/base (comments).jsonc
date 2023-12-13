@@ -9,7 +9,8 @@
 // 60*2=120
 "DFIntTaskSchedulerTargetFps": "999", // higher fps cap and actually reaching it can reduce input delay
 // general fflags (based on RCO flags)
-// it looks likke this can slightly improve perf?
+// 'unknown "performance" fflags (might be unstable. use at extreme fps loss. skip if u want.)'
+// maybe only include this at cas_1975.json
 "FFlagHandleAltEnterFullscreenManually": false,
 "FFlagDisableNewIGMinDUA": true,
 "FFlagPreloadAllFonts": true,
