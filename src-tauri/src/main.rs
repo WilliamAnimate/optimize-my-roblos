@@ -129,7 +129,8 @@ fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
 fn apply_studio_config_json() -> bool {
     show_console();
     println!("running studio config HERE! this probably won't work.");
-    let client_settings = include_bytes!("CAS_perf.json");
+    // use the fflags that don't affect how the game looks, since this is a developer environment
+    let client_settings = include_bytes!("CAS_studio.json");
     let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
