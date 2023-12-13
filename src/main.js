@@ -8,7 +8,7 @@ const btn_advanced = document.getElementById("btn-advanced");
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
-let develop = true;
+let develop = false;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
@@ -29,7 +29,7 @@ async function getLastError() {
 
 function checkForNewVersion() {
 	const xhr = new XMLHttpRequest();
-	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases");
+	xhr.open("GET", "https://api.github.com/repos/williamanimate/optimize-my-roblos/releases/latest");
 	xhr.setRequestHeader("User-Agent", "optimize_my_roblos"); // FIXME: lmaoooo don't do this
 
 	xhr.onload = async function() {
@@ -37,10 +37,10 @@ function checkForNewVersion() {
 			hideElementById(document.getElementById("cursor-wait-hbox"))
 		}
 
-		const releases = JSON.parse(xhr.responseText);
-		const latest = releases[0].tag_name.slice(1);
-
+		const latest = JSON.parse(xhr.responseText).tag_name.slice(1);
 		const result = await invoke("get_version");
+
+		// this code doesn't work, and it should be redundant anyways, since now the new behaviour is to check the latest release (which does not include prereleases)
 		if (!/[^0-9]/.test(latest) || !/[^0-9]/.test(result)) {
 			// assume that a version is like 1.0.0*-alpha* or something similar; don't try
 			hideElementById(document.getElementById("cursor-wait-hbox"));
