@@ -1,2 +1,2 @@
 [toolchain]
-channel = "nightly-2023-11-11" # The nightly release to use, you can update this to the most recent one if you want
+channel = "nightly-2023-12-10" # The nightly release to use, you can update this to the most recent one if you want
