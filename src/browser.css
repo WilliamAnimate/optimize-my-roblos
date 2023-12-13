@@ -1,9 +1,0 @@
-/* this css file is only for development purposes only; if you're seeing this, this probably means that the code you are about to compile isn't production-ready */
-
-/* actually, this code doesn't even work the way i wanted to due to my extensive usage of position: fixed, so this code will probably be deleted at some point */
-
-html {
-	width: 800px;
-	height: 600px;
-	border: red solid 1px;
-}
