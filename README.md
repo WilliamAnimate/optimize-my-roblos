@@ -2,37 +2,28 @@
 
 # optimize-my-roblos
 
-A simple and small GUI application for optimizing the roblox ClientAppSettings.json file.
+A simple and small GUI application for optimizing the roblox ClientAppSettings.json file. <!-- Supports both Roblox and Roblox Studio -->
+
+> [!IMPORTANT]
+> Optimize-my-Roblos **DOES NOT** support microsoft store Roblox!
 
 [Optimize my Roblos is based off kit's fflags](https://rentry.co/robloxpotatofflags)
 
 ## Table of contents
 
-- [Why Optimize_my_Roblos over others?](#why-optimize_my_roblos-over-others)
-- [Why others over Optimize_my_Roblos?](#why-others-over-optimize_my_roblos)
+- [Goal](#goal)
 - [Troubleshooting/manually installing](#troubleshooting)
 - [Building from Source](#building-from-source)
 - [License](#license)
 
-## Why Optimize_my_Roblos over others?
+## Goal
 
-- Actually has a GUI.
+This program has one and only one purpose only: put the flags at the right place. No editing the flags, no persistance across updates.
 
-- Some applications that promise to do the same thing as Optimize_my_Roblos are really, really big binaries, some of them being 20 megabytes; Optimize_my_Roblos is **less** than 3 megabytes.
-
-- No need to stay in the background.
-
-- Fast: less than 5 seconds of your time and you're good to go.
-
-- 100% Open Source Software, powered by Open Source. No hidden malware.
-
-## Why others over Optimize_my_Roblos?
-
-<!-- markdownlint-disable MD052 -->
-- Literally just a website.
-<!-- markdownlint-enable MD052 -->
-
-- Made by someone who has no clue what a fflag stands for.
+> **If**
+> you need something that can preserve the flags even when Roblox updates **or** have a gui to edit your flags...
+>
+> consider using [BloxStrap](https://github.com/pizzaboxer/bloxstrap) over Optimize-my-Roblos
 
 ## Troubleshooting
 
