@@ -25,19 +25,14 @@ lazy_static!(
 ///
 /// for me (11/11/2023), it returns `C:\Users\willi\AppData\Local\Roblox\Versions\version-3aba366803e44f0e`
 // TODO: fix indentation hell
-fn find_roblox_exe(directory: &Path) -> Option<String> {
+fn find_roblox_exe(directory: &std::path::Path) -> Option<String> {
     if let Ok(entries) = fs::read_dir(directory) {
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                if let Some(folder_name) = find_roblox_exe(&path) {
-                    return Some(folder_name);
-                }
-            } else if path.is_file() && path.file_name() == Some("RobloxPlayerBeta.exe".as_ref()) {
-                if let Some(parent) = path.parent() {
-                    if let Some(folder_name) = parent.file_name() {
-                        return Some(folder_name.to_string_lossy().to_string());
-                    }
+                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxPlayerBeta.exe"))).unwrap()
+                {
+                    return Some(path.file_name().unwrap().to_string_lossy().to_string());
                 }
             }
         }
@@ -52,20 +47,14 @@ fn find_roblox_exe(directory: &Path) -> Option<String> {
 /// - you have a match statement to see the result
 ///
 /// returns: the full path of the working directory, if its not found, it will return `None`.
-// this code is just a copy and paste of find_roblox_exe, if this code breaks, chances are, its *probably* not a fault of this own function's doings.
-fn find_studio_exe(directory: &Path) -> Option<String> {
+fn find_studio_exe(directory: &std::path::Path) -> Option<String> {
     if let Ok(entries) = fs::read_dir(directory) {
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                if let Some(folder_name) = find_studio_exe(&path) {
-                    return Some(folder_name);
-                }
-            } else if path.is_file() && path.file_name() == Some("RobloxStudioBeta.exe".as_ref()) {
-                if let Some(parent) = path.parent() {
-                    if let Some(folder_name) = parent.file_name() {
-                        return Some(folder_name.to_string_lossy().to_string());
-                    }
+                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxStudioBeta.exe"))).unwrap()
+                {
+                    return Some(path.file_name().unwrap().to_string_lossy().to_string());
                 }
             }
         }
@@ -152,7 +141,7 @@ fn apply_studio_config_json() -> bool {
             }
         }
         None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
+            set_error(String::from("RobloxStudioBeta not found... do you have Roblox Studio installed?"));
 
             return false
         }

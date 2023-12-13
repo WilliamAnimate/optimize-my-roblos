@@ -8,7 +8,7 @@ const btn_advanced = document.getElementById("btn-advanced");
 
 let lastError; // this variable exists because im too lazy to make a function return promises.
 
-let develop = false;
+let develop = true;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
