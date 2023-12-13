@@ -72,7 +72,7 @@ body, button {
 
 @media (prefers-reduced-motion) {
 	button::before{transition:none!important}
-	button p{transition:none!important}
+	*{transition:none!important}
 }
 
 .hidden {display: none !important}
