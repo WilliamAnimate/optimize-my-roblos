@@ -40,12 +40,6 @@ function checkForNewVersion() {
 		const latest = JSON.parse(xhr.responseText).tag_name.slice(1);
 		const result = await invoke("get_version");
 
-		// this code doesn't work, and it should be redundant anyways, since now the new behaviour is to check the latest release (which does not include prereleases)
-		if (!/[^0-9]/.test(latest) || !/[^0-9]/.test(result)) {
-			// assume that a version is like 1.0.0*-alpha* or something similar; don't try
-			hideElementById(document.getElementById("cursor-wait-hbox"));
-			return;
-		}
 		if (latest > result) {
 			const update_text_container = document.getElementById("update_text_container");
 			const update_bypass = document.getElementById("update_bypass");
@@ -70,10 +64,12 @@ function checkForNewVersion() {
 }
 
 async function tweak(element, funct) {
-	putLoadingAnimationOnId(element);
+	element.disabled = true;
+	element.innerHTML = '<p>Please wait</p>';
+	element.classList.add("cursor-wait");
+
 	try {
 		var result = await invoke(funct); // use var to keep it declared for the rest of the function
-		// FINALLY a use case for var.
 	} catch (e) {
 		panic("Failed to call the optimize function, does it exist?", e + ". Result info: " + result);
 	}
@@ -81,7 +77,8 @@ async function tweak(element, funct) {
 		await getLastError();
 		panic("Backend threw an error", lastError);
 	}
-	removeLoadingAnimationOnId(element);
+	element.classList.remove("cursor-wait");
+	element.innerHTML = "<p>Done!</p>";
 }
 
 const optimizeBtn = document.getElementById("btn-optimize");
@@ -96,15 +93,12 @@ optimizeBtn.addEventListener("click", async function() {
 	await tweak(optimizeBtn, "optimize_lowspec"); // assume the user is on a slow machine, why else would they be here?
 	showElementById(document.getElementById("done-txt"));
 });
-
 studioBtn.addEventListener("click", function() {
 	tweak(studioBtn, "apply_studio_config_json");
 });
-
 unoptimizeBtn.addEventListener("click", function() {
 	tweak(unoptimizeBtn, "unoptimize");
 });
-
 nineteenSeventyFiveTweaksBtn.addEventListener("click", function() {
 	tweak(nineteenSeventyFiveTweaksBtn, "optimize_1975");
 });
@@ -173,18 +167,6 @@ function closeDialogById(element) {
 	}, 295);
 }
 
-function putLoadingAnimationOnId(element) {
-	element.disabled = true;
-	element.innerHTML = '<svg style="width:40px;height:40px"viewBox="0 0 16 16"><circle style="stroke:#63ADE5;fill:none;stroke-width:2px;stroke-linecap:round;transform-origin:50% 50%;animation:spin-infinite 2s linear infinite"cx="8px"cy="8px"r="7px"></circle></svg>';
-
-	element.classList.add("cursor-wait");
-}
-
-function removeLoadingAnimationOnId(element, newText = "<p>Done!</p>") {
-	element.classList.remove("cursor-wait");
-	element.innerHTML = newText;
-}
-
 function initSetTheme() {
 	if (!develop || window.matchMedia('prefers-reduced-motion: reduce')) {
 		setTimeout(function() {
@@ -207,8 +189,8 @@ initSetTheme();
 // background is handled by js; we need this.
 // attribution: https://stackoverflow.com/questions/59621784/how-to-detect-prefers-color-scheme-change-in-javascript
 // TODO: one liner this someday
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => e.matches && initSetTheme());
-window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", e => e.matches && initSetTheme());
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", initSetTheme());
+window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", initSetTheme());
 
 btn_advanced.addEventListener("click", function() {
 	openDialogById(document.getElementById("_d_advanced"));
@@ -218,8 +200,7 @@ invoke("get_version").then((ver) => {
 	document.getElementById("version").textContent = "v" + ver;
 });
 
-if (!develop) {
+if (!develop)
 	setTimeout(checkForNewVersion(), 1000);
-} else {
+else
 	setTimeout(hideElementById(document.getElementById("cursor-wait-hbox")), 100);
-}
