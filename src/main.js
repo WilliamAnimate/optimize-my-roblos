@@ -1,10 +1,10 @@
-const invoke = window.__TAURI__.invoke
+// const invoke = window.__TAURI__.invoke
 const btn_advanced = document.getElementById("btn-advanced");
 
 /**
  * development purposes only; so you don't ACTUALLY call the rust backend
  */
-// function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
+function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
 let develop = true;
 
@@ -109,7 +109,7 @@ optimizeGpuBtn.addEventListener("click", function() {
 
 function panic(title, message) {
 	document.querySelectorAll('dialog').forEach(element => {
-		element.remove();
+		element.close();
 	});
 	// document.getElementById('main-container').remove();
 
@@ -120,6 +120,14 @@ function panic(title, message) {
 	panic.classList.add("onTop");
 	showElementById(panic);
 	panic.style.opacity = 1;
+}
+
+function unpanic() {
+	console.log("recovering from panic now!");
+	const panic = document.getElementById("panic");
+	hideElementById(panic);
+	panic.style.opacity = 0;
+	panic.classList.remove("onTop");
 }
 
 function hideElementById(element) {
