@@ -45,15 +45,11 @@ If it isn't working, then its probably best to install it manually. Don't worry,
 
 ### prerequisites
 
-you may or may not need the following:
-
-- [npm](https://nodejs.org) <!-- wait isn't this techinically nodejs? am i high? -->
-- [**NIGHTLY** rust toolchain](https://rust-lang.org)
+- [Rust Toolchain](https://rust-lang.org)
+- [Tauri](https://tauri.app/) (via `cargo install create-tauri-app --locked`)
 
 > [!NOTE]
-> Versions above 1.0.0 are built using the **Rust nightly toolchain**, `rustc 1.76.0-nightly (2c1b65ee1 2023-11-11)`
->
-> (2,695,680 bytes -> 2,575,872 bytes)
+> Compiled binaries are built with the **Nightly Rust Toolchain**
 
 ### then, to build
 
@@ -61,12 +57,9 @@ run the `b.bat` file (or run `npm run tauri dev`) in the root directory, and to 
 
 ## License
 
-This project is licensed under MIT. This means that you are allowed to do anything you want with this project, as long as you do the following:
+The code under this repo are licensed under MIT.
 
-1. Give me attribution for using the code.
-1. Understand that no warranty will be provided, so I will not be liable if this code somehow wipes all the databases of your startup or something.
-
-This project uses fonts licensed under the OFL.
+This project uses the Lexend font, which is licensed under OFL.
 
 ## Download
 
