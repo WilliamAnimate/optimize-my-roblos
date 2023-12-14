@@ -3,7 +3,7 @@
 
 mod console;
 
-use crate::console::{cli_attach_to_console, show_console};
+use crate::console::cli_attach_to_console;
 use std::{path::Path, fs, env, sync::Mutex};
 
 use winreg::{enums::*, RegKey};
@@ -116,8 +116,6 @@ fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
 /// responsible for roblox studio ig
 #[tauri::command]
 fn apply_studio_config_json() -> bool {
-    show_console();
-    println!("running studio config HERE! this probably won't work.");
     // use the fflags that don't affect how the game looks, since this is a developer environment
     let client_settings = include_bytes!("CAS_studio.json");
     let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
@@ -125,8 +123,6 @@ fn apply_studio_config_json() -> bool {
     match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
             let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
-
-            dbg!(&rblx_path);
 
             if let Err(err) = fs::create_dir_all(&rblx_path) {
                 set_error(format!("Error creating folder: {}", err));
