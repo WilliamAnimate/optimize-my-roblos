@@ -6,8 +6,6 @@ const btn_advanced = document.getElementById("btn-advanced");
  */
 // function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
-let lastError; // this variable exists because im too lazy to make a function return promises.
-
 let develop = true;
 
 window.addEventListener('contextmenu', e => {
@@ -16,15 +14,11 @@ window.addEventListener('contextmenu', e => {
 window.addEventListener('keydown', e=>{if(!develop)e.preventDefault()});
 
 /**
- * call this function with `await`, then get the value of lastError.
- * @returns does not. read the value of lastError instead.
+ * gets the last error.
+ * @returns the raw promise from invoke() of the last error. you would want to retrive it with getLastError.then((e) => {doSomethingWith(e)})
  */
 async function getLastError() {
-	try {
-		lastError = await invoke("get_last_error");
-	} catch (e) {
-		panic("i quit my job, the error handler can't even get an error", "WTF DID YOU DO??? " + e);
-	}
+	return await invoke("get_last_error");
 }
 
 function checkForNewVersion() {
@@ -74,8 +68,9 @@ async function tweak(element, funct) {
 		panic("Failed to call the optimize function, does it exist?", e + ". Result info: " + result);
 	}
 	if (result !== true) {
-		await getLastError();
-		panic("Backend threw an error", lastError);
+		getLastError().then((e) => {
+			panic("Backend threw an error", e);
+		});
 	}
 	element.classList.remove("cursor-wait");
 	element.innerHTML = "<p>Done!</p>";
@@ -116,7 +111,7 @@ function panic(title, message) {
 	document.querySelectorAll('dialog').forEach(element => {
 		element.remove();
 	});
-	document.getElementById('main-container').remove();
+	// document.getElementById('main-container').remove();
 
 	document.getElementById("errortitle").textContent = title;
 	document.getElementById("errormessage").textContent = message;
