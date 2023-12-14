@@ -277,8 +277,13 @@ fn main() {
                             println!("Failed to apply optimizations: {}", get_last_error());
                         }
                     }
+                    Some("studio") => {
+                        if !apply_studio_config_json() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
                     _ => {
-                        todo!("select it in command line mode instead of typing the entire thing idfk")
+                        println!("parameter needed")
                     }
                 }
             }
@@ -292,8 +297,13 @@ fn main() {
                 println!("=== HELP ===");
                 println!("If this is an actual plea for help, this isn't the right place.");
                 println!("otherwise, if you need help with CLI mode, then this is the right place");
-                println!("-optimizenow -o          runs the optimizer from CLI mode");
-                println!("-help -h                 shows the help menu, looks like you already figured this out");
+                println!("-optimize -o                first switch for the optimizer");
+                println!("              perf          optimize for performance only; no visual quality tradeoff");
+                println!("              1975          favour (favor) maximum performance.");
+                println!("              lowspec       default optimization profile used in GUI mode");
+                println!("              office        if your machine is relatively new");
+                println!("              studio        optimize Roblox Studio.");
+                println!("-help -h                    shows the help menu, looks like you already figured this out");
             }
             _ => {
                 println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
