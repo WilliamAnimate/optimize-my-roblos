@@ -1,9 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod console;
+// mod console;
 
-use crate::console::cli_attach_to_console;
+// use crate::console::cli_attach_to_console;
 use std::{path::Path, fs, env, sync::Mutex};
 
 use winreg::{enums::*, RegKey};
@@ -240,75 +240,75 @@ fn unoptimize() -> bool {
 
 /// this is where the program's entrypoint is. if this is not self-documenting code, then I don't know what is.
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    // let args: Vec<String> = env::args().collect();
 
-    // assume CLI first
-    // look i know tauri has their own feature for CLIs but i like seeing the world burn
-    if args.len() > 1 {
-        cli_attach_to_console();
+    // // assume CLI first
+    // // look i know tauri has their own feature for CLIs but i like seeing the world burn
+    // if args.len() > 1 {
+    //     cli_attach_to_console();
 
-        println!("Optimize_my_Roblos version {}", get_version());
-        println!("Keep in mind that the updater is NOT present in CLI mode.");
+    //     println!("Optimize_my_Roblos version {}", get_version());
+    //     println!("Keep in mind that the updater is NOT present in CLI mode.");
 
-        match args.get(1).map(|arg| arg.as_str()) {
-            Some("-optimize") | Some("-o") => {
-                match args.get(1).map(|arg| arg.as_str()) {
-                    Some("perf") => {
-                        if !optimize_perf() {
-                            println!("Failed to apply optimizations: {}", get_last_error());
-                        }
-                    }
-                    Some("nineteenseventyfive") | Some("1975") => {
-                        if !optimize_1975() {
-                            println!("Failed to apply optimizations: {}", get_last_error());
-                        }
-                    }
-                    Some("lowspec") => {
-                        if !optimize_lowspec() {
-                            println!("Failed to apply optimizations: {}", get_last_error());
-                        }
-                    }
-                    Some("office") => {
-                        if !optimize_office() {
-                            println!("Failed to apply optimizations: {}", get_last_error());
-                        }
-                    }
-                    Some("studio") => {
-                        if !apply_studio_config_json() {
-                            println!("Failed to apply optimizations: {}", get_last_error());
-                        }
-                    }
-                    _ => {
-                        println!("parameter needed")
-                    }
-                }
-            }
-            Some("-unoptimize") | Some("-u") => {
-                println!("removing tweaks");
-                if !unoptimize() {
-                    println!("Failed to remove optimizations: {}", get_last_error());
-                }
-            }
-            Some("-help") | Some("-h") => {
-                println!("=== HELP ===");
-                println!("If this is an actual plea for help, this isn't the right place.");
-                println!("otherwise, if you need help with CLI mode, then this is the right place");
-                println!("-optimize -o                first switch for the optimizer");
-                println!("              perf          optimize for performance only; no visual quality tradeoff");
-                println!("              1975          favour (favor) maximum performance.");
-                println!("              lowspec       default optimization profile used in GUI mode");
-                println!("              office        if your machine is relatively new");
-                println!("              studio        optimize Roblox Studio.");
-                println!("-help -h                    shows the help menu, looks like you already figured this out");
-            }
-            _ => {
-                println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
-            }
-        }
+    //     match args.get(1).map(|arg| arg.as_str()) {
+    //         Some("-optimize") | Some("-o") => {
+    //             match args.get(1).map(|arg| arg.as_str()) {
+    //                 Some("perf") => {
+    //                     if !optimize_perf() {
+    //                         println!("Failed to apply optimizations: {}", get_last_error());
+    //                     }
+    //                 }
+    //                 Some("nineteenseventyfive") | Some("1975") => {
+    //                     if !optimize_1975() {
+    //                         println!("Failed to apply optimizations: {}", get_last_error());
+    //                     }
+    //                 }
+    //                 Some("lowspec") => {
+    //                     if !optimize_lowspec() {
+    //                         println!("Failed to apply optimizations: {}", get_last_error());
+    //                     }
+    //                 }
+    //                 Some("office") => {
+    //                     if !optimize_office() {
+    //                         println!("Failed to apply optimizations: {}", get_last_error());
+    //                     }
+    //                 }
+    //                 Some("studio") => {
+    //                     if !apply_studio_config_json() {
+    //                         println!("Failed to apply optimizations: {}", get_last_error());
+    //                     }
+    //                 }
+    //                 _ => {
+    //                     println!("parameter needed")
+    //                 }
+    //             }
+    //         }
+    //         Some("-unoptimize") | Some("-u") => {
+    //             println!("removing tweaks");
+    //             if !unoptimize() {
+    //                 println!("Failed to remove optimizations: {}", get_last_error());
+    //             }
+    //         }
+    //         Some("-help") | Some("-h") => {
+    //             println!("=== HELP ===");
+    //             println!("If this is an actual plea for help, this isn't the right place.");
+    //             println!("otherwise, if you need help with CLI mode, then this is the right place");
+    //             println!("-optimize -o                first switch for the optimizer");
+    //             println!("              perf          optimize for performance only; no visual quality tradeoff");
+    //             println!("              1975          favour (favor) maximum performance.");
+    //             println!("              lowspec       default optimization profile used in GUI mode");
+    //             println!("              office        if your machine is relatively new");
+    //             println!("              studio        optimize Roblox Studio.");
+    //             println!("-help -h                    shows the help menu, looks like you already figured this out");
+    //         }
+    //         _ => {
+    //             println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
+    //         }
+    //     }
 
-        println!("press any key to exit");
-        std::process::exit(420);
-    }
+    //     println!("press any key to exit");
+    //     std::process::exit(420);
+    // }
 
     // no CLI, start the GUI.
     tauri::Builder::default()
