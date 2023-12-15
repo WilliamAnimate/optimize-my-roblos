@@ -15,7 +15,7 @@ window.addEventListener('keydown', e=>{if(!develop)e.preventDefault()});
 
 /**
  * gets the last error.
- * @returns the raw promise from invoke() of the last error. you would want to retrive it with getLastError.then((e) => {doSomethingWith(e)})
+ * @returns the raw promise from invoke() of the last error. you would want to retrive it with getLastError().then((e) => {doSomethingWith(e)})
  */
 async function getLastError() {
 	return await invoke("get_last_error");
@@ -28,7 +28,8 @@ function checkForNewVersion() {
 
 	xhr.onload = async function() {
 		if (xhr.status !== 200) {
-			hideElementById(document.getElementById("cursor-wait-hbox"))
+			hideElementById(document.getElementById("cursor-wait-hbox"));
+			return;
 		}
 
 		const latest = JSON.parse(xhr.responseText).tag_name.slice(1);
@@ -111,7 +112,6 @@ function panic(title, message) {
 	document.querySelectorAll('dialog').forEach(element => {
 		element.close();
 	});
-	// document.getElementById('main-container').remove();
 
 	document.getElementById("errortitle").textContent = title;
 	document.getElementById("errormessage").textContent = message;
@@ -120,6 +120,8 @@ function panic(title, message) {
 	panic.classList.add("onTop");
 	showElementById(panic);
 	panic.style.opacity = 1;
+
+	throw `error title: ${title}, message: ${message}`;
 }
 
 function unpanic() {
@@ -158,6 +160,10 @@ function openDialogById(element) {
 }
 
 function closeDialogById(element) {
+	if (typeof element.close === "function" || element == null) {
+		panic("error in frontend", "this dialog doesn't have the .close() function");
+	}
+
 	element.style.opacity = '0';
 	element.style.transform = 'translateY(20px)';
 
@@ -177,7 +183,7 @@ function initSetTheme() {
 			// so we just ease it in
 			document.body.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--color-bg');
 
-			// could adding fadein cause a significant problem? TODO: test this later
+			// adding fadein *might* cause a problem when changing the background (this function gets called again when prefers-color-scheme changes)
 			document.body.classList.add("fadein");
 			document.body.style.opacity = 1;
 		}, 40);
@@ -203,7 +209,7 @@ invoke("get_version").then((ver) => {
 	document.getElementById("version").textContent = "v" + ver;
 });
 
-if (!develop)
-	setTimeout(checkForNewVersion(), 1000);
-else
+if (develop)
 	setTimeout(hideElementById(document.getElementById("cursor-wait-hbox")), 100);
+else
+	setTimeout(checkForNewVersion(), 1000);

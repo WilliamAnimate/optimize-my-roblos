@@ -30,8 +30,7 @@ fn find_roblox_exe(directory: &std::path::Path) -> Option<String> {
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxPlayerBeta.exe"))).unwrap()
-                {
+                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxPlayerBeta.exe"))).unwrap() {
                     return Some(path.file_name().unwrap().to_string_lossy().to_string());
                 }
             }
@@ -52,8 +51,7 @@ fn find_studio_exe(directory: &std::path::Path) -> Option<String> {
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
-                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxStudioBeta.exe"))).unwrap()
-                {
+                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxStudioBeta.exe"))).unwrap() {
                     return Some(path.file_name().unwrap().to_string_lossy().to_string());
                 }
             }
@@ -75,17 +73,15 @@ fn init_get_local_appdata_path() -> String {
 }
 
 /// this only acceps `String`s, not &str 💀
+///
 /// thank you, format!()
-fn set_error(error_str: String) -> bool {
-    // idfk
-    let mut error_var = LAST_ERROR.lock().unwrap();
-    *error_var = error_str;
-    true
+fn set_error(error_str: String) {
+    *LAST_ERROR.lock().unwrap() = error_str.clone();
 }
 
 /// the actual code responsible for optimizing this.
 fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
@@ -118,7 +114,7 @@ fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
 fn apply_studio_config_json() -> bool {
     // use the fflags that don't affect how the game looks, since this is a developer environment
     let client_settings = include_bytes!("CAS_studio.json");
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
@@ -147,10 +143,9 @@ fn apply_studio_config_json() -> bool {
 }
 
 #[tauri::command]
-fn get_last_error() -> String {
+fn get_last_error() {
     // if something is holding the mutex forever we're just gonna hang here
-    // :skulley:
-    LAST_ERROR.lock().unwrap().to_string()
+    LAST_ERROR.lock().unwrap().to_string();
 }
 
 /// returns the app version, if this is not self-documenting code then I don't know what is.
@@ -211,8 +206,6 @@ fn optimize_gpu_settings() -> bool {
             false
         }
     }
-
-    // Ok(())
 }
 
 #[tauri::command]
@@ -325,5 +318,6 @@ fn main() {
         ])
 
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect(""); // empty message to save like idk a few bytes or some
+                         // if it even saves anything in the first place.
 }
