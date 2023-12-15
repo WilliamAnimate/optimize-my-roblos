@@ -6,7 +6,7 @@ const btn_advanced = document.getElementById("btn-advanced");
  */
 // function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
-let develop = true;
+let develop = false;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
@@ -160,8 +160,8 @@ function openDialogById(element) {
 }
 
 function closeDialogById(element) {
-	if (typeof element.close === "function" || element == null) {
-		panic("error in frontend", "this dialog doesn't have the .close() function");
+	if (element == null) {
+		panic("error in frontend", "element is null.");
 	}
 
 	element.style.opacity = '0';
