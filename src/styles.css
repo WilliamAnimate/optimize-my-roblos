@@ -26,13 +26,13 @@
 
 @font-face {
 	font-family: Lexend;
-	src: url(Lexend-Regular.ttf);
+	src: url(Lexend-Regular.woff2);
 	font-weight: normal;
 }
 
 @font-face {
 	font-family: Lexend;
-	src: url(Lexend-Bold.ttf);
+	src: url(Lexend-Bold.woff2);
 	font-weight: bold;
 }
 
