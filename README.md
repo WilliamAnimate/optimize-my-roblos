@@ -49,15 +49,15 @@ If it isn't working, then its probably best to install it manually. Don't worry,
 - [Tauri](https://tauri.app/) (via `cargo install create-tauri-app --locked`)
 
 > [!NOTE]
-> Compiled binaries are built with the **Nightly Rust Toolchain**
+> The prebuilt binaries are built with the **Nightly Rust Toolchain**
 
 ### then, to build
 
-run the `b.bat` file (or run `npm run tauri dev`) in the root directory, and to compile in release mode, run `npm run tauri build`, still in the root directory.
+run the `b.bat` file (or run `cargo tauri build`) in the root directory, and to compile in release mode, run `compile.bat`.
 
 ## License
 
-The code under this repo are licensed under MIT.
+The code under this repo is licensed under MIT.
 
 This project uses the Lexend font, which is licensed under OFL.
 
