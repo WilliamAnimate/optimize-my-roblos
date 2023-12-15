@@ -2,7 +2,7 @@
 
 # optimize-my-roblos
 
-A simple and small GUI application for optimizing the roblox ClientAppSettings.json file. <!-- Supports both Roblox and Roblox Studio -->
+A simple and small GUI application for optimizing the roblox ClientAppSettings.json file. Supports both Roblox and Roblox Studio
 
 > [!IMPORTANT]
 > Optimize-my-Roblos **DOES NOT** support microsoft store Roblox!
