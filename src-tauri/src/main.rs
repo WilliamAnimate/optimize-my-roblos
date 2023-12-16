@@ -1,9 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// mod console;
+mod console;
 
-// use crate::console::cli_attach_to_console;
+use crate::console::{cli_attach_to_console, cli_detach_from_console};
 use std::{path::Path, fs, env, sync::Mutex};
 
 use winreg::{enums::*, RegKey};
@@ -143,9 +143,9 @@ fn apply_studio_config_json() -> bool {
 }
 
 #[tauri::command]
-fn get_last_error() {
+fn get_last_error() -> String {
     // if something is holding the mutex forever we're just gonna hang here
-    LAST_ERROR.lock().unwrap().to_string();
+    LAST_ERROR.lock().unwrap().to_string()
 }
 
 /// returns the app version, if this is not self-documenting code then I don't know what is.
@@ -231,77 +231,127 @@ fn unoptimize() -> bool {
     }
 }
 
+#[tauri::command]
+fn unoptimize_studio() -> bool {
+    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+
+    match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+        Some(result_folder_name) => {
+            match fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path)) {
+                Ok(_) => true,
+                Err(err) => {
+                    set_error(format!("wtf? {}", err));
+
+                    false
+                }
+            }
+        }
+        None => {
+            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
+
+            false
+        }
+    }
+}
+
 /// this is where the program's entrypoint is. if this is not self-documenting code, then I don't know what is.
 fn main() {
-    // let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
 
-    // // assume CLI first
-    // // look i know tauri has their own feature for CLIs but i like seeing the world burn
-    // if args.len() > 1 {
-    //     cli_attach_to_console();
+    // assume CLI first
+    // look i know tauri has their own feature for CLIs but i like seeing the world burn
+    if args.len() > 1 {
+        cli_attach_to_console();
 
-    //     println!("Optimize_my_Roblos version {}", get_version());
-    //     println!("Keep in mind that the updater is NOT present in CLI mode.");
+        println!("Optimize_my_Roblos version {}", get_version());
+        println!("Keep in mind that the updater is NOT present in CLI mode.");
 
-    //     match args.get(1).map(|arg| arg.as_str()) {
-    //         Some("-optimize") | Some("-o") => {
-    //             match args.get(1).map(|arg| arg.as_str()) {
-    //                 Some("perf") => {
-    //                     if !optimize_perf() {
-    //                         println!("Failed to apply optimizations: {}", get_last_error());
-    //                     }
-    //                 }
-    //                 Some("nineteenseventyfive") | Some("1975") => {
-    //                     if !optimize_1975() {
-    //                         println!("Failed to apply optimizations: {}", get_last_error());
-    //                     }
-    //                 }
-    //                 Some("lowspec") => {
-    //                     if !optimize_lowspec() {
-    //                         println!("Failed to apply optimizations: {}", get_last_error());
-    //                     }
-    //                 }
-    //                 Some("office") => {
-    //                     if !optimize_office() {
-    //                         println!("Failed to apply optimizations: {}", get_last_error());
-    //                     }
-    //                 }
-    //                 Some("studio") => {
-    //                     if !apply_studio_config_json() {
-    //                         println!("Failed to apply optimizations: {}", get_last_error());
-    //                     }
-    //                 }
-    //                 _ => {
-    //                     println!("parameter needed")
-    //                 }
-    //             }
-    //         }
-    //         Some("-unoptimize") | Some("-u") => {
-    //             println!("removing tweaks");
-    //             if !unoptimize() {
-    //                 println!("Failed to remove optimizations: {}", get_last_error());
-    //             }
-    //         }
-    //         Some("-help") | Some("-h") => {
-    //             println!("=== HELP ===");
-    //             println!("If this is an actual plea for help, this isn't the right place.");
-    //             println!("otherwise, if you need help with CLI mode, then this is the right place");
-    //             println!("-optimize -o                first switch for the optimizer");
-    //             println!("              perf          optimize for performance only; no visual quality tradeoff");
-    //             println!("              1975          favour (favor) maximum performance.");
-    //             println!("              lowspec       default optimization profile used in GUI mode");
-    //             println!("              office        if your machine is relatively new");
-    //             println!("              studio        optimize Roblox Studio.");
-    //             println!("-help -h                    shows the help menu, looks like you already figured this out");
-    //         }
-    //         _ => {
-    //             println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
-    //         }
-    //     }
+        match args.get(1).map(|arg| arg.as_str()) {
+            Some("-optimize") | Some("-o") => {
+                match args.get(2).map(|arg| arg.as_str()) {
+                    Some("perf") => {
+                        if !optimize_perf() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("nineteenseventyfive") | Some("1975") => {
+                        if !optimize_1975() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("lowspec") => {
+                        if !optimize_lowspec() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("office") => {
+                        if !optimize_office() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("studio") => {
+                        if !apply_studio_config_json() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    _ => {
+                        println!("parameter needed");
+                    }
+                }
+            }
+            Some("-unoptimize") | Some("-u") => {
+                match args.get(2).map(|arg| arg.as_str()) {
+                    Some("roblox") => {
+                        println!("removing *ROBLOX CLIENT* optimizations");
+                        if !unoptimize() {
+                            println!("Failed to remove optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("studio") => {
+                        println!("removing *ROBLOX STUDIO* optimizations");
+                        if !unoptimize_studio() {
+                            println!("Failed to remove optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("all") | Some("*") => {
+                        println!("removing *ROBLOX CLIENT* and *ROBLOX STUDIO* optimizations");
+                        if !unoptimize() {
+                            println!("Failed to remove roblox tweaks: {}", get_last_error());
+                        }
+                        if !unoptimize_studio() {
+                            println!("Failed to remove studio tweaks: {}", get_last_error());
+                        }
+                    }
+                    _ => {
+                        println!("parameter needed");
+                    }
+                }
 
-    //     println!("press any key to exit");
-    //     std::process::exit(420);
-    // }
+            }
+            Some("-help") | Some("-h") => {
+                println!("=== HELP ===");
+                println!("If this is an actual plea for help, this isn't the right place.");
+                println!("otherwise, if you need help with CLI mode, then this is the right place");
+                println!("-optimize  -o             first switch for the optimizer");
+                println!("    perf                  optimize for performance only; no visual quality tradeoff");
+                println!("    1975                  favour (favor) maximum performance.");
+                println!("    lowspec               default optimization profile used in GUI mode");
+                println!("    office                if your machine is relatively new");
+                println!("    studio                optimize Roblox Studio.");
+                println!("-unoptimize -u");
+                println!("    roblox                unoptimizes roblox (the game)");
+                println!("    studio                unoptimizes studio (the hackerman thing)");
+                println!("    all  *                unoptimizes both roblox and studio");
+                println!("-help  -h                 shows the help menu, looks like you already figured this out");
+            }
+            _ => {
+                println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
+            }
+        }
+
+        cli_detach_from_console();
+        std::process::exit(420);
+    }
 
     // no CLI, start the GUI.
     tauri::Builder::default()

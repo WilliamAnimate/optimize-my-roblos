@@ -2,6 +2,7 @@ const ATTACH_PARENT_PROCESS: u32 = 0xFFFFFFFF;
 
 extern "system" {
     fn AttachConsole(dw_process_id: u32) -> i32;
+    fn FreeConsole() -> i32;
     // fn AllocConsole() -> i32;
     // fn ShowWindow(handle: *mut std::ffi::c_void, n_cmd_show: i32) -> i32;
     // fn GetConsoleWindow() -> *mut std::ffi::c_void;
@@ -19,12 +20,13 @@ extern "system" {
 ///
 /// this works differently than show_console() because this attaches, not creating a new one
 ///
-/// please note that when the program's execution ends, the default terminal $s$g will not be shown without user input. FIXME: that
-///
-/// and please remember that this is a work in progress, don't use this 💀
+/// # IF YOU CALL THIS FUNCTION, PLEASE CALL console::cli_detach_from_console() TO SHOW THE SYSTEM'S DEFAULT $s$g PROMPT!
 pub fn cli_attach_to_console() { unsafe {
 	AttachConsole(ATTACH_PARENT_PROCESS);
+}}
 
-	println!(""); // print nothing to fix something
-				  // go figure it out yourself, future me
+/// detaches from the current console
+/// # use only when exiting
+pub fn cli_detach_from_console() { unsafe {
+    FreeConsole();
 }}
