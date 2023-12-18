@@ -1,9 +1,7 @@
 const invoke = window.__TAURI__.invoke
 const btn_advanced = document.getElementById("btn-advanced");
 
-/**
- * development purposes only; so you don't ACTUALLY call the rust backend
- */
+/**development purposes only; so you don't ACTUALLY call the rust backend*/
 // function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
 let develop = false;
@@ -66,7 +64,7 @@ async function tweak(element, funct) {
 	try {
 		var result = await invoke(funct); // use var to keep it declared for the rest of the function
 	} catch (e) {
-		panic("Failed to call the optimize function, does it exist?", e + ". Result info: " + result);
+		panic(`Failed to call the optimize function, does it exist? ${e}. Result info: ${result}`);
 	}
 	if (result !== true) {
 		getLastError().then((e) => {
