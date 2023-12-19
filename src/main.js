@@ -64,7 +64,7 @@ async function tweak(element, funct) {
 	try {
 		var result = await invoke(funct); // use var to keep it declared for the rest of the function
 	} catch (e) {
-		panic(`Failed to call the optimize function, does it exist? ${e}. Result info: ${result}`);
+		panic("Failed to call the optimize function, does it exist?", `${e}. Result info: ${result}`);
 	}
 	if (result !== true) {
 		getLastError().then((e) => {
