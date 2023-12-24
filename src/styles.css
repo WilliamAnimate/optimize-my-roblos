@@ -155,9 +155,6 @@ a {color: #00aeff}
 }
 
 .transform-centering {transform: translate(-50%, -50%)}
-/* for some STUPID REASON you need a transform for some buttons
-i hatecssihatecssihatecss */
-.transform-none {transform: translate(0px, 0px)}
 
 /* okay not half but you get the point */
 button.half-width {width: 198px; padding: 0.3em 0.6em}
@@ -190,6 +187,7 @@ button {
 
 	width: 400px;
 	height: 80px;
+	transform: translate(0px, 0px); /* remove this and everything falls apart */
 }
 
 button::before {

@@ -16,7 +16,7 @@
 				<p id="errormessage"></p>
 			</fieldset>
 			<br>
-			<button onclick="unpanic()" class="transform-none"><p>recover from panic</p></button>
+			<button onclick="unpanic()"><p>recover from panic</p></button>
 		</div>
 
 		<div class="cursor-wait" id="cursor-wait-hbox">
@@ -42,10 +42,10 @@
 			<p style="color:red">These tweaks are experimental and may or may not be operating-system level. Be careful with them.</p>
 
 			<div>
-				<button id="btn-adv-1975" class="half-height transform-none"><p>Assume your machine is from 1975</p></button>
-				<button id="btn-adv-office" class="half-height transform-none"><p>Assume mid-end machine</p></button>
-				<button id="btn-adv-perf" class=" half-width half-height transform-none"><p>No visual tradeoff</p></button>
-				<button id="btn-adv-optimizegpu" class="half-width half-height transform-none"><p>Optimize GPU settings/dwm</p></button>
+				<button id="btn-adv-1975" class="half-height"><p>Assume your machine is from 1975</p></button>
+				<button id="btn-adv-office" class="half-height"><p>Assume mid-end machine</p></button>
+				<button id="btn-adv-perf" class=" half-width half-height"><p>No visual tradeoff</p></button>
+				<button id="btn-adv-optimizegpu" class="half-width half-height"><p>Optimize GPU settings/dwm</p></button>
 			</div>
 
 			<button onclick="closeDialogById(document.getElementById('_d_advanced'))" class="half-width" style="position: fixed; bottom: 4px; right: 4px"><p>close</p></button>
@@ -64,6 +64,6 @@
 		</dialog>
 
 		<p id="copyright">© 2023 WilliamAnimate. This project is licensed under MIT.</p>
-		<button onclick="openDialogById(document.getElementById('_d_about'))" class="half-height transform-none" style="position:fixed;right:5px;bottom:5px;width:100px;padding:0"><p>about</p></button>
+		<button onclick="openDialogById(document.getElementById('_d_about'))" class="half-height" style="position:fixed;right:5px;bottom:5px;width:100px;padding:0"><p>about</p></button>
 	</body>
 </html>
