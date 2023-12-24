@@ -10,6 +10,7 @@ repository = "https://github.com/williamanimate/optimize-my-roblos/"
 [dependencies]
 lazy_static = "1.4.0"
 winreg = "0.51.0"
+terrible-roblox-optimizer = { path = "../terrible-roblox-optimizer" } # the backend for optimizing; do not remove
 
 [dependencies.tauri]
 version = "1.5"

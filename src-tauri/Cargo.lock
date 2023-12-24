@@ -1672,6 +1672,7 @@ dependencies = [
  "lazy_static",
  "tauri",
  "tauri-build",
+ "terrible-roblox-optimizer",
  "winreg",
 ]
 
@@ -2799,6 +2800,13 @@ dependencies = [
  "futf",
  "mac",
  "utf-8",
+]
+
+[[package]]
+name = "terrible-roblox-optimizer"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
 ]
 
 [[package]]
