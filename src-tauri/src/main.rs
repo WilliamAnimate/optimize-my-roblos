@@ -6,7 +6,7 @@ mod console;
 use crate::console::{cli_attach_to_console, cli_detach_from_console};
 use std::{path::Path, fs, env, sync::Mutex};
 
-use winreg::{enums::*, RegKey};
+#[cfg(windows)] use winreg::{enums::*, RegKey};
 
 use lazy_static::lazy_static;
 
@@ -176,35 +176,40 @@ fn optimize_office() -> bool {
 
 #[tauri::command]
 fn optimize_gpu_settings() -> bool {
-    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-    // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
-
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
-
-            let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
-            let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
-            // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
-
-            let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
-            let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
-            // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
-
-            // note: clone the rblx_path so it doesn't mess things up
-            let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
-            let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
-            // key_perf_options.set_value("CpuPriorityClass", &"3");
-
-            true
+    #[cfg(windows)] {
+        let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+        // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+    
+        let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+    
+        match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+            Some(result_folder_name) => {
+                let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
+    
+                let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
+                let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
+                // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
+    
+                let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
+                let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
+                // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
+    
+                // note: clone the rblx_path so it doesn't mess things up
+                let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
+                let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
+                // key_perf_options.set_value("CpuPriorityClass", &"3");
+    
+                true
+            }
+            None => {
+                set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
+    
+                false
+            }
         }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-            false
-        }
+    }
+    #[cfg(not(windows))] {
+        unimplemented!("you can't change registry in linux because linux doesn't have registry, silly.");
     }
 }
 
