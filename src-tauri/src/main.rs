@@ -8,6 +8,8 @@ extern crate terrible_roblox_optimizer;
 use crate::console::{cli_attach_to_console, cli_detach_from_console};
 use std::{fs, env, sync::Mutex};
 
+#[cfg(windows)] use winreg::{enums::*, RegKey};
+
 use terrible_roblox_optimizer::{optimize_directory_specific_file, unoptimize_directory};
 use lazy_static::lazy_static;
 

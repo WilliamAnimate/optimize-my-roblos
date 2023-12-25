@@ -185,6 +185,7 @@ TODO: delete this "code" someday
 #[cfg(test)]
 mod tests {
     use crate::{find_directory_containing_executable, unoptimize_directory};
+    use crate::{find_executable_in_directory, unoptimize_directory};
 
     // #[test]
     // fn get_error() {
