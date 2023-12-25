@@ -39,10 +39,9 @@ fn get_localappdata_path() -> String {
 /// let result = find_executable_in_directory(file_to_find, &directory);
 /// println!("{:?}", result);
 /// ```
-// TODO: fix indentation hell
-fn find_executable_in_directory(file_to_find: &str, directory: &std::path::Path) -> Option<String> {
-    dbg!(&file_to_find);
-
+// FIXME: fix indentation hell
+// FIXME: name, still misleading.
+fn find_directory_containing_executable(file_to_find: &str, directory: &std::path::Path) -> Option<String> {
     if let Ok(entries) = fs::read_dir(directory) {
         for entry in entries.flatten() {
             let path = entry.path();
@@ -77,7 +76,7 @@ pub fn unoptimize_directory(flag_file: &str) -> Result<(), std::io::Error> {
         Err(err) => panic!("wheres your %localappdata%? {}", err),
     };
 
-    match find_executable_in_directory(
+    match find_directory_containing_executable(
         flag_file,
         &std::env::current_dir()
             .unwrap()
@@ -103,12 +102,12 @@ pub fn unoptimize_directory(flag_file: &str) -> Result<(), std::io::Error> {
 
 /// flag_file: the file to look for
 /// client_settings: include_bytes! variable. this should be the ClientSettings.json file.
-pub fn optimize_directory_specific_file(flag_file: &str, client_settings: &[u8; 0]) -> Result<(), std::io::Error> {
+pub fn optimize_directory_specific_file(flag_file: &str, client_settings: &[u8]) -> Result<(), std::io::Error> {
     // use the fflags that don't affect how the game looks, since this is a developer environment
     // let client_settings: &[u8; 0] = include_bytes!("CAS_studio.json");
     let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
-    match find_executable_in_directory(flag_file, &std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+    match find_directory_containing_executable(flag_file, &std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
             let rblx_path = format!(
                 "{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings",
@@ -185,7 +184,7 @@ TODO: delete this "code" someday
 
 #[cfg(test)]
 mod tests {
-    use crate::{find_executable_in_directory, unoptimize_directory, GiveErr};
+    use crate::{find_directory_containing_executable, unoptimize_directory};
 
     // #[test]
     // fn get_error() {
@@ -206,7 +205,7 @@ mod tests {
             Err(err) => panic!("wheres your %localappdata%? {}", err),
         };
 
-        let testresult = find_executable_in_directory(
+        let testresult = find_directory_containing_executable(
             "RobloxPlayerBeta.exe",
             &std::env::current_dir()
                 .unwrap()
@@ -230,7 +229,7 @@ mod tests {
             Err(err) => panic!("wheres your %localappdata%? {}", err),
         };
 
-        match find_executable_in_directory(
+        match find_directory_containing_executable(
             "RobloxPlayerBeta.exe",
             &std::env::current_dir()
                 .unwrap()
@@ -257,7 +256,7 @@ mod tests {
             unoptimize_directory("RobloxPlayerBeta.exe")
         );
 
-        match find_executable_in_directory(
+        match find_directory_containing_executable(
             "RobloxPlayerBeta.exe",
             &std::env::current_dir()
                 .unwrap()

@@ -3,41 +3,21 @@
 
 mod console;
 
+extern crate terrible_roblox_optimizer;
+
 use crate::console::{cli_attach_to_console, cli_detach_from_console};
-use std::{path::Path, fs, env, sync::Mutex};
+use std::{fs, env, sync::Mutex};
 
-use winreg::{enums::*, RegKey};
-
+use terrible_roblox_optimizer::{optimize_directory_specific_file, unoptimize_directory};
 use lazy_static::lazy_static;
+
+// #[cfg(windows)] use winreg::{enums::*, RegKey};
+
 
 lazy_static!(
     static ref LAST_ERROR: Mutex<String> = Mutex::new(String::from("No error details were set."));
     static ref LOCALAPPDATA_PATH: Mutex<String> = Mutex::new(init_get_local_appdata_path());
 );
-
-/// finds the roblox working directory. this code assumes that:
-///
-/// - you have supplied the directory to search, keep in mind that **there is _no_ fallback directory if it isn't supplied**
-/// - roblox does not modify the way "instances" are installed. this code works as of 11/11/2023
-/// - you have a match statement to see the result
-///
-/// returns: the full path of the working directory, if its not found, it will return `None`.
-///
-/// for me (11/11/2023), it returns `C:\Users\willi\AppData\Local\Roblox\Versions\version-3aba366803e44f0e`
-// TODO: fix indentation hell
-fn find_roblox_exe(directory: &std::path::Path) -> Option<String> {
-    if let Ok(entries) = fs::read_dir(directory) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.is_dir() {
-                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxPlayerBeta.exe"))).unwrap() {
-                    return Some(path.file_name().unwrap().to_string_lossy().to_string());
-                }
-            }
-        }
-    }
-    None
-}
 
 /// finds the roblox STUDIO working directory. this code assumes that:
 ///
@@ -79,67 +59,15 @@ fn set_error(error_str: String) {
     *LAST_ERROR.lock().unwrap() = error_str.clone();
 }
 
-/// the actual code responsible for optimizing this.
-fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
-    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
-
-            if let Err(err) = fs::create_dir_all(&rblx_path) {
-                set_error(format!("Error creating folder: {}", err));
-
-                return false;
-            }
-
-            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                set_error(format!("Error creating file: {}", err).to_string());
-
-                return false;
-            }
-        }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-            return false
-        }
-    }
-
-    true // we gud 👍
-}
-
 /// responsible for roblox studio ig
 #[tauri::command]
 fn apply_studio_config_json() -> bool {
-    // use the fflags that don't affect how the game looks, since this is a developer environment
-    let client_settings = include_bytes!("CAS_studio.json");
-    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
-
-            if let Err(err) = fs::create_dir_all(&rblx_path) {
-                set_error(format!("Error creating folder: {}", err));
-
-                return false;
-            }
-
-            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                set_error(format!("Error creating file: {}", err).to_string());
-
-                return false;
-            }
-        }
-        None => {
-            set_error(String::from("RobloxStudioBeta not found... do you have Roblox Studio installed?"));
-
-            return false
-        }
+    match optimize_directory_specific_file("RobloxStudioBeta.exe", include_bytes!("CAS_studio.json")) {
+        Ok(_) => return true,
+        Err(err) => set_error(err.to_string()),
     }
 
-    true // we gud 👍
+    false
 }
 
 #[tauri::command]
@@ -156,79 +84,100 @@ fn get_version() -> String {
 
 #[tauri::command]
 fn optimize_perf() -> bool {
-    apply_clientappsettings_json(include_bytes!("CAS_perf.json"))
+    match optimize_directory_specific_file("RobloxPlayerBeta.exe", include_bytes!("CAS_perf.json")) {
+        Ok(_) => return true,
+        Err(err) => set_error(err.to_string()),
+    }
+
+    false
 }
 
 #[tauri::command]
 fn optimize_1975() -> bool {
-    apply_clientappsettings_json(include_bytes!("CAS_1975.json"))
+    match optimize_directory_specific_file("RobloxPlayerBeta.exe", include_bytes!("CAS_perf.json")) {
+        Ok(_) => return true,
+        Err(err) => set_error(err.to_string()),
+    }
+
+    false
 }
 
 #[tauri::command]
 fn optimize_lowspec() -> bool {
-    apply_clientappsettings_json(include_bytes!("CAS_lowspec.json"))
+    match optimize_directory_specific_file("RobloxPlayerBeta.exe", include_bytes!("CAS_perf.json")) {
+        Ok(_) => return true,
+        Err(err) => set_error(err.to_string()),
+    }
+
+    false
 }
 
 #[tauri::command]
 fn optimize_office() -> bool {
-    apply_clientappsettings_json(include_bytes!("CAS_office.json"))
+    match optimize_directory_specific_file("RobloxPlayerBeta.exe", include_bytes!("CAS_perf.json")) {
+        Ok(_) => return true,
+        Err(err) => set_error(err.to_string()),
+    }
+
+    false
 }
 
 #[tauri::command]
 fn optimize_gpu_settings() -> bool {
-    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-    // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+    todo!("make this code work again, like putting it into the crate?");
+    // #[cfg(windows)] {
+    //     let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    //     // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+    //     let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
-    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
+    //     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+    //         Some(result_folder_name) => {
+    //             let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
 
-            let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
-            let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
-            // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
+    //             let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
+    //             let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
+    //             // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
 
-            let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
-            let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
-            // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
+    //             let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
+    //             let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
+    //             // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
 
-            // note: clone the rblx_path so it doesn't mess things up
-            let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
-            let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
-            // key_perf_options.set_value("CpuPriorityClass", &"3");
+    //             // note: clone the rblx_path so it doesn't mess things up
+    //             let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
+    //             let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
+    //             // key_perf_options.set_value("CpuPriorityClass", &"3");
 
-            true
-        }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
+    //             true
+    //         }
+    //         None => {
+    //             set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
 
-            false
-        }
-    }
+    //             false
+    //         }
+    //     }
+    // }
+    // #[cfg(not(windows))] {
+    //     unimplemented!("you can't change registry in linux because linux doesn't have registry, silly.");
+    // }
 }
 
+/// this code will unoptimize both roblox AND studio.
 #[tauri::command]
 fn unoptimize() -> bool {
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            match fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path)) {
-                Ok(_) => true,
-                Err(err) => {
-                    set_error(format!("wtf? {}", err));
-
-                    false
-                }
+    match unoptimize_directory("RobloxPlayerBeta.exe") {
+    // && unoptimize_directory("RobloxStudioBeta.exe") {
+        Ok(_) => {
+            // FIXME: fix this absolutely terrible code, can't you just match this() && that()
+            match unoptimize_directory("RobloxStudioBeta.exe") {
+                Ok(_) => return true,
+                Err(err) => set_error(err.to_string()),
             }
-        }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-            false
-        }
+        },
+        Err(err) => set_error(err.to_string()),
     }
+
+    false
 }
 
 #[tauri::command]
