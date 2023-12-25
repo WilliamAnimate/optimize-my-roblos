@@ -4,7 +4,7 @@ const btn_advanced = document.getElementById("btn-advanced");
 /**development purposes only; so you don't ACTUALLY call the rust backend*/
 // function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
-let develop = false;
+let develop = true;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();

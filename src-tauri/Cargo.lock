@@ -1669,6 +1669,7 @@ dependencies = [
 name = "optimize_my_roblos"
 version = "1.2.1"
 dependencies = [
+ "backtrace",
  "lazy_static",
  "tauri",
  "tauri-build",

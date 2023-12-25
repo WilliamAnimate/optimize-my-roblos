@@ -76,26 +76,17 @@ pub fn unoptimize_directory(flag_file: &str) -> Result<(), std::io::Error> {
         Err(err) => panic!("wheres your %localappdata%? {}", err),
     };
 
-    match find_directory_containing_executable(
-        flag_file,
-        &std::env::current_dir()
-            .unwrap()
-            .join(format!("{local_appdata_path}\\Roblox\\Versions")),
-    ) {
+    match find_directory_containing_executable(flag_file, &std::env::current_dir().unwrap().join(format!("{local_appdata_path}\\Roblox\\Versions"))) {
         Some(result_folder_name) => {
-            match fs::remove_dir_all(format!(
-                "{local_appdata_path}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings"
-            )) {
+            dbg!(format!("{local_appdata_path}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings"));
+            match fs::remove_dir_all(format!("{local_appdata_path}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings")) {
                 Ok(_) => Ok(()),
                 Err(err) => Err(err),
             }
         }
         None => {
             // FIXME: is there another way to do this? i literally asked chatgpt lmao
-            Err(*Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                String::from("RobloxPlayerBeta.exe not found! Do you have the game installed?"),
-            )))
+            Err(*Box::new(std::io::Error::new(std::io::ErrorKind::Other, String::from("RobloxPlayerBeta.exe not found! Do you have the game installed?"))))
         }
     }
 }
@@ -118,10 +109,7 @@ pub fn optimize_directory_specific_file(flag_file: &str, client_settings: &[u8])
                 return Err(err);
             }
 
-            if let Err(err) = fs::write(
-                format!("{}\\ClientAppSettings.json", rblx_path),
-                client_settings,
-            ) {
+            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings,) {
                 return Err(err);
             }
         }
@@ -133,67 +121,9 @@ pub fn optimize_directory_specific_file(flag_file: &str, client_settings: &[u8])
     Ok(())
 }
 
-//#region randomshit
-/*
-allow me to explain what i tried to do here
-so basically i tried to return custom error types
-yewah very nice
-TODO: delete this "code" someday
-*/
-
-// fn give_me_an_err_varient(text: &str) -> Result<std::io::Error, _> {
-//     Err(*Box::new(std::io::Error::new(std::io::ErrorKind::Other, String::from(text))))
-// }
-
-// GiveErr is so stupid, imagine if there was just one macro that would do this.
-// #[derive(Debug)]
-// struct GiveErr {
-//     message: String,
-// }
-
-// impl fmt::Display for GiveErr {
-//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-//         write!(f, "{}", self.message)
-//     }
-// }
-
-// impl From<&str> for GiveErr {
-//     fn from(message: &str) -> Self {
-//         GiveErr {
-//             message: String::from(message),
-//             // message: (*Box::new(std::io::Error::new(std::io::ErrorKind::Other, String::from(message)))).to_string()
-//         }
-//     }
-// }
-// // fn give_me_an_err_variant(text: &str) -> Result<(), GiveErr> {
-// //     Err(GiveErr::from(text))
-// // }
-
-// struct MyError {
-//     message: String,
-// }
-
-// impl From<&str> for MyError {
-//     fn from(item: &str) -> Self {
-//         MyError {
-//             message: item.to_string(),
-//         }
-//     }
-// }
-//#endregion randomshit
-
 #[cfg(test)]
 mod tests {
     use crate::{find_directory_containing_executable, unoptimize_directory};
-    use crate::{find_executable_in_directory, unoptimize_directory};
-
-    // #[test]
-    // fn get_error() {
-    //     match MyError::from("this") {
-    //         Ok(_) => panic!("wtf"),
-    //         Err(err) => println!("it works! {:?}", err),
-    //     }
-    // }
 
     #[test]
     fn identify_roblox_directory() {
