@@ -9,7 +9,12 @@ repository = "https://github.com/williamanimate/optimize-my-roblos/"
 
 [dependencies]
 lazy_static = "1.4.0"
-winreg = "0.51.0"
+
+[target.'cfg(unix)'.dependencies]
+home = "0.5.9"
+
+# [target.'cfg(windows)'.dependencies] 
+# winreg = "0.51.0"
 
 [dependencies.tauri]
 version = "1.5"

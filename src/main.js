@@ -4,7 +4,7 @@ const btn_advanced = document.getElementById("btn-advanced");
 /**development purposes only; so you don't ACTUALLY call the rust backend*/
 // function invoke(a){console.log(`invoked function: ${a}`); return new Promise(resolve=>{resolve("0.69")})}
 
-let develop = false;
+let develop = true;
 
 window.addEventListener('contextmenu', e => {
 	e.preventDefault();
@@ -82,6 +82,7 @@ const nineteenSeventyFiveTweaksBtn = document.getElementById("btn-adv-1975");
 const officeTweaksBtn = document.getElementById("btn-adv-office");
 const perfTweaksBtn = document.getElementById("btn-adv-perf");
 const optimizeGpuBtn = document.getElementById("btn-adv-optimizegpu");
+const optimizeVinegarBtn = document.getElementById("btn-adv-unix-vinegar");
 
 optimizeBtn.addEventListener("click", async function() {
 	await tweak(optimizeBtn, "optimize_lowspec"); // assume the user is on a slow machine, why else would they be here?
@@ -105,6 +106,9 @@ perfTweaksBtn.addEventListener("click", function() {
 optimizeGpuBtn.addEventListener("click", function() {
 	tweak(optimizeGpuBtn, "optimize_gpu_settings");
 });
+optimizeVinegarBtn.addEventListener("click", function() {
+  tweak(optimizeVinegarBtn, "optimize_linux_vinegar");
+})
 
 function panic(title, message) {
 	document.querySelectorAll('dialog').forEach(element => {

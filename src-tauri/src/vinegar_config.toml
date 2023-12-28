@@ -1,0 +1,37 @@
+# this is basically the same as CAS_office.json (iirc) but it uses the vulkan renderer with some minor optimizations
+# i would like to thank fikinoob (github.com/fikinoob) for telling me to consider dxvk in the first place, because i would have just set the fflags to use vulkan instead of translating D3D11 calls to vulkan
+# ^ apperantly using vulkan like that slows stuff down so uhhhhhhhhhh yesah
+# and i would like to not thank fikinoob (github.com/fikinoob) for telling to use grapejuice (which due to my extreme skill issues on arch linux i am unable to launch roblox on it)
+[player]
+dxvk = true
+renderer = "D3D11"
+
+[player.fflags]
+DFIntTaskSchedulerTargetFps = 999
+FFlagHandleAltEnterFullscreenManually= false
+FFlagAnimationClipMemCacheEnabled = true
+FFlagFixGraphicsQuality = true
+FFlagCommitToGraphicsQualityFix = true
+FFlagDontCreatePingJob = true
+FFlagFastGPULightCulling3 = true
+FFlagRenderGpuTextureCompressor = true
+FFlagGraphicsCheckComputeSupport = true
+
+DFIntCSGLevelOfDetailSwitchingDistance = 0
+DFIntCSGLevelOfDetailSwitchingDistanceL12 = 0
+DFIntCSGLevelOfDetailSwitchingDistanceL23 = 0
+DFIntCSGLevelOfDetailSwitchingDistanceL34 = 0
+FIntRenderShadowIntensity = 0
+FIntDebugForceMSAASamples = 0
+FIntRenderLocalLightUpdatesMax = 1
+FIntRenderLocalLightUpdatesMin = 1
+FFlagDisablePostFx = true
+FFlagDebugDisableTelemetryEphemeralCounter = true
+FFlagDebugDisableTelemetryEphemeralStat = true
+FFlagDebugDisableTelemetryEventIngest = true
+FFlagDebugDisableTelemetryPoint = true
+FFlagDebugDisableTelemetryV2Counter = true
+FFlagDebugDisableTelemetryV2Event = true
+FFlagDebugDisableTelemetryV2Stat = true
+DFFlagAudioDeviceTelemetry = false
+DFFlagEnableHardwareTelemetry = false
