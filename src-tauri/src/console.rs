@@ -1,8 +1,6 @@
-// WINDOWS ONLY!
-// when compiling for linux, it should be safe to ignore, as LTO should get rid of it
+#[cfg(windows)] const ATTACH_PARENT_PROCESS: u32 = 0xFFFFFFFF;
 
-const ATTACH_PARENT_PROCESS: u32 = 0xFFFFFFFF;
-
+#[cfg(windows)]
 extern "system" {
     fn AttachConsole(dw_process_id: u32) -> i32;
     fn FreeConsole() -> i32;
@@ -24,10 +22,12 @@ extern "system" {
 /// this works differently than show_console() because this attaches, not creating a new one
 ///
 /// # IF YOU CALL THIS FUNCTION, PLEASE CALL console::cli_detach_from_console() TO SHOW THE SYSTEM'S DEFAULT $s$g PROMPT!
+#[cfg(windows)]
 pub fn cli_attach_to_console() { unsafe {
-	AttachConsole(ATTACH_PARENT_PROCESS);
+    AttachConsole(ATTACH_PARENT_PROCESS);
 }}
 
+#[cfg(windows)]
 /// detaches from the current console
 /// # use only when exiting
 pub fn cli_detach_from_console() { unsafe {

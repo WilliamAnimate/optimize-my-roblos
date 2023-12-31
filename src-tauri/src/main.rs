@@ -2,8 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod console;
+extern crate terrible_roblox_optimizer;
 
-#[cfg(unix)] use home::home_dir;
+#[cfg(unix)] use home;
 #[cfg(windows)] use crate::console::{cli_attach_to_console, cli_detach_from_console};
 use std::{fs, env, sync::Mutex};
 
@@ -40,27 +41,6 @@ fn find_roblox_exe(directory: &std::path::Path) -> Option<String> {
     None
 }
 
-/// finds the roblox STUDIO working directory. this code assumes that:
-///
-/// - you have supplied the directory to search, keep in mind that **there is _no_ fallback directory if it isn't supplied**
-/// - roblox does not modify the way "instances" are installed. this code works as of 12/11/2023
-/// - you have a match statement to see the result
-///
-/// returns: the full path of the working directory, if its not found, it will return `None`.
-fn find_studio_exe(directory: &std::path::Path) -> Option<String> {
-    if let Ok(entries) = fs::read_dir(directory) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.is_dir() {
-                if fs::read_dir(&path).map(|mut dir| dir.any(|entry| entry.as_ref().map_or(false, |file| file.file_name() == "RobloxStudioBeta.exe"))).unwrap() {
-                    return Some(path.file_name().unwrap().to_string_lossy().to_string());
-                }
-            }
-        }
-    }
-    None
-}
-
 /// don't call this function, its only here to get the appdata path
 fn init_get_local_appdata_path() -> String {
     let local_appdata_path = match std::env::var("LOCALAPPDATA") {
@@ -73,74 +53,18 @@ fn init_get_local_appdata_path() -> String {
     local_appdata_path
 }
 
+apply_clientappsettings_json(settings: &[u8]) {
+    // this code is probably very slow (comparatively) because its passing the include_bytes value
+    // over and over again
+    // too bad!
+    
+}
+
 /// this only acceps `String`s, not &str 💀
 ///
 /// thank you, format!()
 fn set_error(error_str: String) {
     *LAST_ERROR.lock().unwrap() = error_str.clone();
-}
-
-/// the actual code responsible for optimizing this.
-fn apply_clientappsettings_json(client_settings: &[u8]) -> bool {
-    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
-
-            if let Err(err) = fs::create_dir_all(&rblx_path) {
-                set_error(format!("Error creating folder: {}", err));
-
-                return false;
-            }
-
-            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                set_error(format!("Error creating file: {}", err).to_string());
-
-                return false;
-            }
-        }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-            return false
-        }
-    }
-
-    true // we gud 👍
-}
-
-/// responsible for roblox studio ig
-#[tauri::command]
-fn apply_studio_config_json() -> bool {
-    // use the fflags that don't affect how the game looks, since this is a developer environment
-    let client_settings = include_bytes!("CAS_studio.json");
-    let local_appdata_path = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path);
-
-            if let Err(err) = fs::create_dir_all(&rblx_path) {
-                set_error(format!("Error creating folder: {}", err));
-
-                return false;
-            }
-
-            if let Err(err) = fs::write(format!("{}\\ClientAppSettings.json", rblx_path), client_settings) {
-                set_error(format!("Error creating file: {}", err).to_string());
-
-                return false;
-            }
-        }
-        None => {
-            set_error(String::from("RobloxStudioBeta not found... do you have Roblox Studio installed?"));
-
-            return false
-        }
-    }
-
-    true // we gud 👍
 }
 
 #[tauri::command]
@@ -255,29 +179,6 @@ fn unoptimize() -> bool {
     let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
     match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-        Some(result_folder_name) => {
-            match fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path)) {
-                Ok(_) => true,
-                Err(err) => {
-                    set_error(format!("wtf? {}", err));
-
-                    false
-                }
-            }
-        }
-        None => {
-            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-            false
-        }
-    }
-}
-
-#[tauri::command]
-fn unoptimize_studio() -> bool {
-    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
-
-    match find_studio_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
         Some(result_folder_name) => {
             match fs::remove_dir_all(format!("{}\\Roblox\\Versions\\{result_folder_name}\\ClientSettings", local_appdata_path)) {
                 Ok(_) => true,
