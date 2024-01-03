@@ -5,10 +5,10 @@
 // this base will enable literally everything
 // will have worse perf depending on the system
 {
-// unlock FPS, i'll assume that since you're trying to optimize-your-roblos, your screen refresh rate is 60.
-// 60*2=120
-"DFIntTaskSchedulerTargetFps": "999", // higher fps cap and actually reaching it can reduce input delay
-// general fflags (based on RCO flags)
+// unlock FPS.
+"DFIntTaskSchedulerTargetFps": "999", // higher fps cap. higher fps equates to less input delay (latency)
+                                      // this comes at the cost of higher heat, assuming you do get past 60 fps.
+                                      // of course, the final cap will be at 999 fps just to prevent your rtx 3090 from suffering Rust's menu again
 // 'unknown "performance" fflags (might be unstable. use at extreme fps loss. skip if u want.)'
 // maybe only include this at cas_1975.json
 "FFlagHandleAltEnterFullscreenManually": false,
@@ -60,6 +60,9 @@
 "FStringPartTexturePackTable2022": "{\"glass\":{\"ids\":[\"rbxassetid://7547304948\",\"rbxassetid://7546645118\"],\"color\":[254,254,254,7]}}",
 "FStringTerrainMaterialTablePre2022": "",
 "FStringTerrainMaterialTable2022": "",
+
+// remove materals (significantly improves perf)
+"FFlagDebugDisableOTAMaterialTexture":"true",
 
 // disable antialiasing
 "FIntDebugForceMSAASamples": 0,
