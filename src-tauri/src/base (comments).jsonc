@@ -62,7 +62,7 @@
 "FStringTerrainMaterialTable2022": "",
 
 // remove materals (significantly improves perf)
-"FFlagDebugDisableOTAMaterialTexture":"true",
+"FFlagDebugDisableOTAMaterialTexture": "true",
 
 // disable antialiasing
 "FIntDebugForceMSAASamples": 0,

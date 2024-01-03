@@ -42,7 +42,7 @@
 "FStringTerrainMaterialTablePre2022": "",
 "FStringTerrainMaterialTable2022": "",
 
-"FFlagDebugDisableOTAMaterialTexture":"true",
+"FFlagDebugDisableOTAMaterialTexture": "true",
 
 "FIntDebugForceMSAASamples": 0,
 
