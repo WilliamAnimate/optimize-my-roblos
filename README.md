@@ -7,7 +7,7 @@ A simple and small GUI application for optimizing the roblox ClientAppSettings.j
 > [!IMPORTANT]
 > Optimize-my-Roblos **DOES NOT** support microsoft store Roblox!
 
-[Optimize my Roblos is based off kit's fflags](https://rentry.co/robloxpotatofflags)
+[Optimize my Roblos is based off kit's fflags](https://github.com/catb0x/Roblox-Potato-FFlags)
 
 ## Table of contents
 
