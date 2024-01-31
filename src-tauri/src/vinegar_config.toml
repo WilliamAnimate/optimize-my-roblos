@@ -1,10 +1,8 @@
 # this is basically the same as CAS_office.json (iirc) but it uses the vulkan renderer with some minor optimizations
-# i would like to thank fikinoob (github.com/fikinoob) for telling me to consider dxvk in the first place, because i would have just set the fflags to use vulkan instead of translating D3D11 calls to vulkan
-# ^ apperantly using vulkan like that slows stuff down so uhhhhhhhhhh yesah
-# and i would like to not thank fikinoob (github.com/fikinoob) for telling to use grapejuice (which due to my extreme skill issues on arch linux i am unable to launch roblox on it)
 [player]
-dxvk = true
-renderer = "D3D11"
+dxvk = false
+renderer = "Vulkan"
+gpu = "prime-discrete"
 
 [player.fflags]
 DFIntTaskSchedulerTargetFps = 999
