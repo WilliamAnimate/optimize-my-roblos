@@ -17,6 +17,8 @@
 
 "FIntRenderShadowIntensity": 0,
 
+"FFlagRenderCheckThreading": "true",
+
 "FIntDebugForceMSAASamples": 0,
 
 "FIntRenderLocalLightUpdatesMax": 1,

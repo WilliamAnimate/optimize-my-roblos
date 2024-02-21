@@ -18,6 +18,8 @@
 "DFIntCSGLevelOfDetailSwitchingDistanceL23": 0,
 "DFIntCSGLevelOfDetailSwitchingDistanceL34": 0,
 
+"FFlagRenderCheckThreading": "true",
+
 "FFlagDebugDisableTelemetryEphemeralCounter": true,
 "FFlagDebugDisableTelemetryEphemeralStat": true,
 "FFlagDebugDisableTelemetryEventIngest": true,

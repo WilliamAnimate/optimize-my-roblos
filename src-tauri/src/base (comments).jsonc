@@ -59,6 +59,9 @@
 // remove materals (significantly improves perf)
 "FFlagDebugDisableOTAMaterialTexture": "true",
 
+// try hyperthreading
+"FFlagRenderCheckThreading": "true",
+
 // disable antialiasing
 "FIntDebugForceMSAASamples": 0,
 
