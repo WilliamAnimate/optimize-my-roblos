@@ -1,6 +1,3 @@
-// WINDOWS ONLY!
-// when compiling for linux, it should be safe to ignore, as LTO should get rid of it
-
 const ATTACH_PARENT_PROCESS: u32 = 0xFFFFFFFF;
 
 extern "system" {

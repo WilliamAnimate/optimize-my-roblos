@@ -3,11 +3,10 @@
 
 mod console;
 
-#[cfg(unix)] use home::home_dir;
-#[cfg(windows)] use crate::console::{cli_attach_to_console, cli_detach_from_console};
-use std::{fs, env, sync::Mutex};
+use crate::console::{cli_attach_to_console, cli_detach_from_console};
+use std::{path::Path, fs, env, sync::Mutex};
 
-#[cfg(windows)] use winreg::{enums::*, RegKey};
+use winreg::{enums::*, RegKey};
 
 use lazy_static::lazy_static;
 
@@ -176,77 +175,36 @@ fn optimize_office() -> bool {
 }
 
 #[tauri::command]
-fn optimize_linux_vinegar() -> bool {
-    #[cfg(unix)] {
-        // OKAY, linux is unix but not all unix is linux
-        // but im going to take an assumption that this *is* linux lmao
-        println!("based user found! lets go!11!");
-
-        // vinegar path for me is /home/william/.config/vinegar/config.toml, which can translate to
-        // ~/.config/vinegar/config.toml
-
-        const VINEGAR_CONFIG: &[u8] = include_bytes!("vinegar_config.toml");
-
-        let home = home::home_dir().expect("Failed to get home directory");
-        let vinegar_path = home.join(".config/vinegar/config.toml");
-
-        // if let Err(err) = fs::remove_file(&vinegar_path) {
-        //     set_error(format!("can't remove previous vinegar config... try running me as superuser? {}", err));
-        //
-        //     return false;
-        // }
-
-        if let Err(err) = fs::write(vinegar_path, VINEGAR_CONFIG) {
-            set_error(format!("can't write new vinegar config... try running me as superuser? {}", err));
-
-            return false; 
-        }
-
-        true // we still gud 👍
-    }
-
-    #[cfg(windows)] {
-        unimplemented!("you don't need a compatibility layer like vinegar on windows, silly");
-    }
-}
-
-#[tauri::command]
 fn optimize_gpu_settings() -> bool {
-    #[cfg(windows)] {
-        let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-        // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+    // let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-        let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
+    let local_appdata_path: String = LOCALAPPDATA_PATH.lock().unwrap().to_string();
 
-        match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
-            Some(result_folder_name) => {
-                let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
+    match find_roblox_exe(&std::env::current_dir().unwrap().join(format!("{}\\Roblox\\Versions", local_appdata_path))) {
+        Some(result_folder_name) => {
+            let rblx_path = format!("{}\\Roblox\\Versions\\{result_folder_name}\\RobloxPlayerBeta.exe", local_appdata_path);
 
-                let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
-                let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
-                // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
+            let path_dx11 = Path::new("Software\\Microsoft\\DirectX\\UserGpuPreferences");
+            let path_app_compat_flags = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\AppCompatFlags\\Layers");
+            // let perf_options = Path::new("Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\RobloxPlayerBeta.exe\\PerfOptions");
 
-                let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
-                let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
-                // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
+            let Ok((key_dx11, _)) = hkcu.create_subkey(&path_dx11) else {panic!("gg")};
+            let Ok((key_app_compat_flags, _)) = hkcu.create_subkey(&path_app_compat_flags) else {panic!("gg")};
+            // let (key_perf_options, _) = hklm.create_subkey(&perf_options);
 
-                // note: clone the rblx_path so it doesn't mess things up
-                let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
-                let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
-                // key_perf_options.set_value("CpuPriorityClass", &"3");
+            // note: clone the rblx_path so it doesn't mess things up
+            let _ = key_dx11.set_value(rblx_path.clone(), &"GpuPreference=2;");
+            let _ = key_app_compat_flags.set_value(rblx_path, &"~ DISABLEDXMAXIMIZEDWINDOWEDMODE");
+            // key_perf_options.set_value("CpuPriorityClass", &"3");
 
-                true
-            }
-            None => {
-                set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
-
-                false
-            }
+            true
         }
-    }
-    // anything that ISN'T windows
-    #[cfg(not(windows))] {
-        unimplemented!("the registry you're telling me to write to is only on windows (and reactos...), silly.");
+        None => {
+            set_error(String::from("RobloxPlayerBeta not found... do you have the game installed?"));
+
+            false
+        }
     }
 }
 
@@ -298,103 +256,101 @@ fn unoptimize_studio() -> bool {
 
 /// this is where the program's entrypoint is. if this is not self-documenting code, then I don't know what is.
 fn main() {
-    #[cfg(windows)] {
-        let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
 
-        // assume CLI first
-        // look i know tauri has their own feature for CLIs but i like seeing the world burn
-        if args.len() > 1 {
-            cli_attach_to_console();
+    // assume CLI first
+    // look i know tauri has their own feature for CLIs but i like seeing the world burn
+    if args.len() > 1 {
+        cli_attach_to_console();
 
-            println!("Optimize_my_Roblos version {}", get_version());
-            println!("Keep in mind that the updater is NOT present in CLI mode.");
+        println!("Optimize_my_Roblos version {}", get_version());
+        println!("Keep in mind that the updater is NOT present in CLI mode.");
 
-            match args.get(1).map(|arg| arg.as_str()) {
-                Some("-optimize") | Some("-o") => {
-                    match args.get(2).map(|arg| arg.as_str()) {
-                        Some("perf") => {
-                            if !optimize_perf() {
-                                println!("Failed to apply optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("nineteenseventyfive") | Some("1975") => {
-                            if !optimize_1975() {
-                                println!("Failed to apply optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("lowspec") => {
-                            if !optimize_lowspec() {
-                                println!("Failed to apply optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("office") => {
-                            if !optimize_office() {
-                                println!("Failed to apply optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("studio") => {
-                            if !apply_studio_config_json() {
-                                println!("Failed to apply optimizations: {}", get_last_error());
-                            }
-                        }
-                        _ => {
-                            println!("parameter needed");
+        match args.get(1).map(|arg| arg.as_str()) {
+            Some("-optimize") | Some("-o") => {
+                match args.get(2).map(|arg| arg.as_str()) {
+                    Some("perf") => {
+                        if !optimize_perf() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
                         }
                     }
-                }
-                Some("-unoptimize") | Some("-u") => {
-                    match args.get(2).map(|arg| arg.as_str()) {
-                        Some("roblox") => {
-                            println!("removing *ROBLOX CLIENT* optimizations");
-                            if !unoptimize() {
-                                println!("Failed to remove optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("studio") => {
-                            println!("removing *ROBLOX STUDIO* optimizations");
-                            if !unoptimize_studio() {
-                                println!("Failed to remove optimizations: {}", get_last_error());
-                            }
-                        }
-                        Some("all") | Some("*") => {
-                            println!("removing *ROBLOX CLIENT* and *ROBLOX STUDIO* optimizations");
-                            if !unoptimize() {
-                                println!("Failed to remove roblox tweaks: {}", get_last_error());
-                            }
-                            if !unoptimize_studio() {
-                                println!("Failed to remove studio tweaks: {}", get_last_error());
-                            }
-                        }
-                        _ => {
-                            println!("parameter needed");
+                    Some("nineteenseventyfive") | Some("1975") => {
+                        if !optimize_1975() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
                         }
                     }
-
-                }
-                Some("-help") | Some("-h") => {
-                    println!("=== HELP ===");
-                    println!("If this is an actual plea for help, this isn't the right place.");
-                    println!("otherwise, if you need help with CLI mode, then this is the right place");
-                    println!("-optimize  -o             first switch for the optimizer");
-                    println!("    perf                  optimize for performance only; no visual quality tradeoff");
-                    println!("    1975                  favour (favor) maximum performance.");
-                    println!("    lowspec               default optimization profile used in GUI mode");
-                    println!("    office                if your machine is relatively new");
-                    println!("    studio                optimize Roblox Studio.");
-                    println!("-unoptimize -u");
-                    println!("    roblox                unoptimizes roblox (the game)");
-                    println!("    studio                unoptimizes studio (the hackerman thing)");
-                    println!("    all  *                unoptimizes both roblox and studio");
-                    println!("-help  -h                 shows the help menu, looks like you already figured this out");
-                }
-                _ => {
-                    println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
+                    Some("lowspec") => {
+                        if !optimize_lowspec() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("office") => {
+                        if !optimize_office() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("studio") => {
+                        if !apply_studio_config_json() {
+                            println!("Failed to apply optimizations: {}", get_last_error());
+                        }
+                    }
+                    _ => {
+                        println!("parameter needed");
+                    }
                 }
             }
+            Some("-unoptimize") | Some("-u") => {
+                match args.get(2).map(|arg| arg.as_str()) {
+                    Some("roblox") => {
+                        println!("removing *ROBLOX CLIENT* optimizations");
+                        if !unoptimize() {
+                            println!("Failed to remove optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("studio") => {
+                        println!("removing *ROBLOX STUDIO* optimizations");
+                        if !unoptimize_studio() {
+                            println!("Failed to remove optimizations: {}", get_last_error());
+                        }
+                    }
+                    Some("all") | Some("*") => {
+                        println!("removing *ROBLOX CLIENT* and *ROBLOX STUDIO* optimizations");
+                        if !unoptimize() {
+                            println!("Failed to remove roblox tweaks: {}", get_last_error());
+                        }
+                        if !unoptimize_studio() {
+                            println!("Failed to remove studio tweaks: {}", get_last_error());
+                        }
+                    }
+                    _ => {
+                        println!("parameter needed");
+                    }
+                }
 
-            cli_detach_from_console();
-            std::process::exit(420);
+            }
+            Some("-help") | Some("-h") => {
+                println!("=== HELP ===");
+                println!("If this is an actual plea for help, this isn't the right place.");
+                println!("otherwise, if you need help with CLI mode, then this is the right place");
+                println!("-optimize  -o             first switch for the optimizer");
+                println!("    perf                  optimize for performance only; no visual quality tradeoff");
+                println!("    1975                  favour (favor) maximum performance.");
+                println!("    lowspec               default optimization profile used in GUI mode");
+                println!("    office                if your machine is relatively new");
+                println!("    studio                optimize Roblox Studio.");
+                println!("-unoptimize -u");
+                println!("    roblox                unoptimizes roblox (the game)");
+                println!("    studio                unoptimizes studio (the hackerman thing)");
+                println!("    all  *                unoptimizes both roblox and studio");
+                println!("-help  -h                 shows the help menu, looks like you already figured this out");
+            }
+            _ => {
+                println!("invalid parameter, use -help for help. please note that slash wont help you because im a terrible person");
+            }
         }
+
+        cli_detach_from_console();
+        std::process::exit(420);
     }
 
     // no CLI, start the GUI.
@@ -407,12 +363,11 @@ fn main() {
             optimize_1975,
             optimize_lowspec,
             optimize_office,
-            optimize_linux_vinegar,
             optimize_gpu_settings,
             unoptimize
         ])
 
         .run(tauri::generate_context!())
         .expect(""); // empty message to save like idk a few bytes or some
-                     // if it even saves anything in the first place.
+                         // if it even saves anything in the first place.
 }
