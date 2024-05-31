@@ -17,7 +17,7 @@ features = ["shell-open", "shell-open-api", "wry", "tauri-runtime-wry", "open"]
 default-features = false
 
 [build-dependencies.tauri-build]
-version = "1.6.7"
+version = "1.5"
 features = []
 
 [features]
