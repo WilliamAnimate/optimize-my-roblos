@@ -1,5 +1,11 @@
 <!-- markdownlint-disable MD033 -->
 
+# Archival notice
+
+You should be using [bloxstrap](https://github.com/pizzaboxer/bloxstrap). If for any reason you cannot do that, I will keep this repo, and any binaries contained within, up for grabs.
+
+The default configuration is located [here](https://github.com/WilliamAnimate/optimize-my-roblos/blob/main/src-tauri/src/CAS_lowspec.json)
+
 # optimize-my-roblos
 
 A simple and small GUI application for optimizing the roblox ClientAppSettings.json file. Supports both Roblox and Roblox Studio
